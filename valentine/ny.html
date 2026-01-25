@@ -26,8 +26,7 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden; 
-            /* Cho phép cuộn dọc toàn trang nếu nội dung quá dài khi zoom */
-            overflow-y: auto; 
+            overflow-y: auto; /* Cho phép cuộn trang nếu nội dung dài khi zoom */
         }
         body.night-mode { background: linear-gradient(to bottom, #240b36, #c31432); color: white; }
 
@@ -35,7 +34,6 @@
             position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             visibility: hidden; opacity: 0; text-align: center; padding: 20px; z-index: 20;
-            /* Đảm bảo nội dung không bị cắt khi màn hình nhỏ */
             overflow-y: visible; 
         }
         .active { visibility: visible; opacity: 1; }
@@ -113,10 +111,10 @@
         .tree-right { right: -80px; bottom: -60px; transform: scaleX(-1); transform-origin: bottom center; }
         canvas.tree-canvas { width: 100%; height: 100%; }
 
-        /* --- PHONG BÌ & LÁ THƯ (Đã tối ưu Mobile) --- */
+        /* --- PHONG BÌ & LÁ THƯ --- */
         .envelope-container {
             position: relative; width: 320px; height: 220px; perspective: 1000px;
-            cursor: pointer; margin-top: 100px; /* Giảm margin mặc định */
+            cursor: pointer; margin-top: 100px; 
             transform-origin: center top;
             transition: transform 0.5s ease;
         }
@@ -147,11 +145,11 @@
         .letter-content {
             position: absolute; bottom: 0; left: 50%; 
             width: 300px; 
-            height: 380px; /* Chiều cao gốc */
+            height: 380px; 
             background: #fffdf5;
             padding: 30px 25px; border-radius: 8px; box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
             transform: translate(-50%, 0) scale(0.9); opacity: 0; z-index: 4; 
-            overflow-y: auto; /* Cho phép cuộn nội dung bên trong lá thư */
+            overflow-y: auto;
             transition: transform 0.6s ease-in-out 0s, opacity 0.4s ease-in 0.5s;
         }
         .letter-content::-webkit-scrollbar { width: 4px; }
@@ -161,12 +159,13 @@
             transform: rotateX(180deg); z-index: 1; transition: transform 0.6s ease-in-out 0s, z-index 0.2s linear 0.2s;
         }
         .envelope-container.open .letter-content {
+            /* Mặc định trên Desktop */
             transform: translate(-50%, -50px) scale(1.05); opacity: 1; z-index: 50;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 0.4s ease-in 0.5s;
         }
 
-        /* --- RESPONSIVE MOBILE (PHẦN QUAN TRỌNG) --- */
+        /* --- RESPONSIVE MOBILE (ĐÃ FIX LỖI THƯ BAY QUÁ CAO) --- */
         @media (max-width: 768px) {
             .tet-decor-container { transform: scale(0.7); }
             .left-decor { transform-origin: top left; left: 10px; } 
@@ -176,25 +175,24 @@
             .tree-right { right: -60px; bottom: -30px; }
             .music-player { padding: 8px 12px; bottom: 15px; left: 15px; }
             
-            /* Tinh chỉnh phong bì trên mobile */
+            /* Đẩy phong bì xuống giữa màn hình */
             .envelope-container { 
-                margin-top: 80px; /* Đẩy lên cao hơn chút để có chỗ cho thư bay ra */
-                transform: scale(0.85); /* Thu nhỏ phong bì lại để vừa màn hình */
+                margin-top: 150px; 
+                transform: scale(0.85); 
             }
             
-            /* Tinh chỉnh lá thư khi mở trên mobile */
+            /* Điều chỉnh lá thư nằm thấp, đè lên phong bì */
             .envelope-container.open .letter-content { 
-                /* Bay lên vừa phải (-160px) thay vì bay quá cao */
-                transform: translate(-50%, -160px) scale(1); 
-                width: 95%; /* Chiếm 95% chiều rộng phong bì */
-                max-width: 320px; /* Không quá to */
+                transform: translate(-50%, -50px) scale(1); /* Chỉ nhô lên 50px */
+                width: 90%; 
+                max-width: 300px;
                 height: auto; 
-                max-height: 55vh; /* Chiều cao tự động tối đa 55% màn hình để không bị khuất */
+                max-height: 280px; /* Giới hạn chiều cao */
             }
             
-            /* Đẩy nút tiếp tục xuống để không che thư */
+            /* Nút tiếp tục không bị che */
             .screen button.btn-premium {
-                margin-top: 120px;
+                margin-top: 50px;
             }
         }
 
