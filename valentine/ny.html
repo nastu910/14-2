@@ -1,8 +1,8 @@
 <!DOCTYPE html>
-<html lang="vi" style="height: 100%;">
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=2.5, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=3.0, user-scalable=yes">
     <title>Love & Luck 2026 | Valentine x Tết</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Montserrat:wght@300;400&family=Pangolin&display=swap" rel="stylesheet">
@@ -16,31 +16,26 @@
             --envelope-bg: #922b21; --envelope-flap: #d35400; --envelope-top: #e74c3c;
         }
         
-        /* CẬP NHẬT CSS BODY ĐỂ HỖ TRỢ ZOOM VÀ ĐẢM BẢO BACKGROUND */
+        /* CẬP NHẬT: Body để height auto để khi zoom có thể cuộn được nếu cần */
         body {
             margin: 0; padding: 0;
             font-family: 'Quicksand', sans-serif;
-            /* Đảm bảo background luôn hiển thị */
-            background: radial-gradient(circle at center, #fff0f0 0%, #ffdde1 40%, #ee9ca7 100%) no-repeat fixed center center / cover;
+            background: radial-gradient(circle at center, #fff0f0 0%, #ffdde1 40%, #ee9ca7 100%);
             color: var(--dark-text); 
             transition: background 2s ease;
-            /* Sử dụng min-height để cho phép nội dung dãn ra khi zoom */
-            min-height: 100vh;
-            width: 100%;
-            position: relative; /* Trả về vị trí tương đối để zoom hoạt động */
-            overflow-x: hidden; /* Ngăn thanh cuộn ngang không mong muốn khi chưa zoom */
+            width: 100vw;
+            min-height: 100vh; /* Dùng min-height thay vì height cố định */
+            position: relative;
+            overflow-x: hidden; /* Chỉ ẩn thanh cuộn ngang */
         }
-        /* Background chế độ tối */
-        body.night-mode { background: linear-gradient(to bottom, #240b36, #c31432) no-repeat fixed center center / cover; color: white; }
+        body.night-mode { background: linear-gradient(to bottom, #240b36, #c31432); color: white; }
 
         .screen {
-            position: absolute; top: 0; left: 0; width: 100%; 
-            min-height: 100vh; /* Đảm bảo chiều cao tối thiểu */
+            position: absolute; top: 0; left: 0; width: 100%; min-height: 100vh;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             visibility: hidden; opacity: 0; text-align: center; padding: 20px; z-index: 20;
-            /* Cho phép cuộn nếu nội dung bị zoom quá to */
+            /* Cho phép cuộn dọc nếu nội dung bị zoom quá to */
             overflow-y: auto; 
-            -webkit-overflow-scrolling: touch;
         }
         .active { visibility: visible; opacity: 1; }
         .handwriting { font-family: 'Dancing Script', cursive; }
@@ -52,13 +47,13 @@
             box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4); transition: transform 0.3s, box-shadow 0.3s;
             cursor: pointer; margin-top: 25px; border: 2px solid rgba(255,255,255,0.5);
             z-index: 50; position: relative; letter-spacing: 1px;
-            -webkit-tap-highlight-color: transparent;
+            -webkit-tap-highlight-color: transparent; 
         }
         .btn-premium:hover { transform: scale(1.05); box-shadow: 0 6px 25px rgba(192, 57, 43, 0.6); }
 
-        /* --- MUSIC PLAYER (Vẫn ghim chặt ở góc) --- */
+        /* --- MUSIC PLAYER (GHIM CHẶT - KHÔNG BỊ ZOOM THEO NỘI DUNG) --- */
         .music-player {
-            position: fixed; 
+            position: fixed; /* Luôn nằm yên trên màn hình */
             bottom: 20px; 
             left: 20px; 
             z-index: 200;
@@ -69,8 +64,6 @@
             display: flex; align-items: center; gap: 15px;
             box-shadow: 0 4px 15px rgba(0,0,0,0.1);
             transition: all 0.3s ease;
-            /* Đảm bảo nút không bị quá nhỏ khi zoom màn hình */
-            transform-origin: bottom left;
         }
         .music-btn {
             background: none; border: none; cursor: pointer; color: #c0392b;
@@ -83,10 +76,10 @@
         body.night-mode .music-btn { color: #f1c40f; }
         body.night-mode .music-info { color: #fff; }
 
-        /* --- DECOR TẾT (Vẫn ghim chặt ở góc trên) --- */
+        /* --- DECOR TẾT (GHIM CHẶT) --- */
         .tet-decor-container {
-            position: fixed; 
-            top: -15px;
+            position: fixed; /* Luôn nằm yên trên màn hình */
+            top: -15px; 
             z-index: 60; 
             display: flex; flex-direction: column; align-items: center; 
             animation: sway 3s ease-in-out infinite alternate; 
@@ -94,8 +87,8 @@
             will-change: transform;
         }
         
-        .left-decor { left: 15px; transform-origin: top left; } 
-        .right-decor { right: 15px; transform-origin: top right; }
+        .left-decor { left: 15px; } 
+        .right-decor { right: 15px; }
         
         .decor-string { width: 2px; height: 60px; background: #b01c20; }
         .decor-coin {
@@ -119,10 +112,11 @@
 
         @media (max-width: 768px) {
             .tet-decor-container { 
-                transform: scale(0.7);
+                transform: scale(0.7); 
             }
-            .left-decor { left: 10px; } 
-            .right-decor { right: 10px; }
+            /* Neo vào góc để khi scale không bị trôi */
+            .left-decor { transform-origin: top left; left: 10px; } 
+            .right-decor { transform-origin: top right; right: 10px; }
 
             .cherry-tree-container { width: 300px; height: 450px; }
             .tree-left { left: -60px; bottom: -30px; } 
@@ -130,13 +124,13 @@
             
             .music-player { 
                 padding: 8px 12px; 
-                bottom: 15px; left: 15px;
+                bottom: 15px; left: 15px; 
             }
         }
 
-        /* --- CÁC PHẦN CÒN LẠI --- */
+        /* --- CÁC PHẦN KHÁC --- */
         .cherry-tree-container {
-            position: fixed; /* Đổi thành fixed để luôn ở đáy màn hình */
+            position: fixed; /* Cố định cây ở đáy màn hình */
             bottom: 0; z-index: 10; pointer-events: none;
             width: 500px; height: 600px;
         }
