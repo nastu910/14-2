@@ -1,0 +1,609 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Love & Luck 2026 | Valentine x Tết</title>
+    
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Montserrat:wght@300;400&family=Pangolin&display=swap" rel="stylesheet">
+    
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.2/gsap.min.js"></script>
+    
+    <style>
+        :root {
+            --primary-red: #c0392b; --dark-text: #641e16; --gold: #f1c40f;
+            --envelope-bg: #922b21; --envelope-flap: #d35400; --envelope-top: #e74c3c;
+        }
+        
+        body {
+            margin: 0; overflow: hidden; font-family: 'Quicksand', sans-serif;
+            background: radial-gradient(circle at center, #fff0f0 0%, #ffdde1 40%, #ee9ca7 100%);
+            color: var(--dark-text); transition: background 2s ease; height: 100vh;
+        }
+        body.night-mode { background: linear-gradient(to bottom, #240b36, #c31432); color: white; }
+
+        .screen {
+            position: absolute; top: 0; left: 0; width: 100%; height: 100vh;
+            display: flex; flex-direction: column; align-items: center; justify-content: center;
+            visibility: hidden; opacity: 0; text-align: center; padding: 20px; z-index: 20;
+        }
+        .active { visibility: visible; opacity: 1; }
+        .handwriting { font-family: 'Dancing Script', cursive; }
+        
+        /* Button Style */
+        .btn-premium {
+            background: linear-gradient(135deg, #c0392b, #8e44ad);
+            padding: 12px 40px; border-radius: 50px; color: white; font-weight: bold; font-size: 1.1rem;
+            box-shadow: 0 4px 15px rgba(142, 68, 173, 0.4); transition: transform 0.3s, box-shadow 0.3s;
+            cursor: pointer; margin-top: 25px; border: 2px solid rgba(255,255,255,0.5);
+            z-index: 50; position: relative; letter-spacing: 1px;
+        }
+        .btn-premium:hover { transform: scale(1.05); box-shadow: 0 6px 25px rgba(192, 57, 43, 0.6); }
+
+        /* --- MUSIC PLAYER --- */
+        .music-player {
+            position: fixed; bottom: 20px; left: 20px; z-index: 200;
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            padding: 10px 15px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3);
+            display: flex; align-items: center; gap: 15px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+        }
+        .music-player:hover { background: rgba(255, 255, 255, 0.4); }
+        .music-btn {
+            background: none; border: none; cursor: pointer; color: #c0392b;
+            font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
+            transition: transform 0.2s; width: 30px; height: 30px;
+        }
+        .music-btn:hover { transform: scale(1.2); color: #e74c3c; }
+        .music-btn svg { width: 24px; height: 24px; fill: currentColor; }
+        .music-info { font-size: 0.8rem; font-weight: bold; color: #922b21; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.5s; opacity: 0; }
+        .music-player:hover .music-info { max-width: 150px; opacity: 1; margin-right: 10px; }
+        /* Đổi màu chữ nhạc khi chế độ ban đêm */
+        body.night-mode .music-btn { color: #f1c40f; }
+        body.night-mode .music-info { color: #fff; }
+
+        /* --- DECOR TẾT --- */
+        .tet-decor-container {
+            position: fixed; top: -20px; z-index: 60; display: flex; flex-direction: column;
+            align-items: center; animation: sway 3s ease-in-out infinite alternate; pointer-events: none;
+        }
+        .left-decor { left: 20px; } .right-decor { right: 20px; }
+        .decor-string { width: 2px; height: 60px; background: #b01c20; }
+        .decor-coin {
+            width: 50px; height: 50px; background: #d00000; border: 2px solid #f1c40f;
+            border-radius: 50%; display: flex; align-items: center; justify-content: center;
+            color: #f1c40f; font-family: 'Pangolin', cursive; font-size: 1.2rem; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; margin-bottom: 5px; z-index: 2;
+        }
+        .decor-coin::before {
+            content: ''; position: absolute; top: 2px; left: 2px; right: 2px; bottom: 2px;
+            border: 1px dashed rgba(241, 196, 15, 0.5); border-radius: 50%;
+        }
+        .coin-connector { width: 4px; height: 10px; background: #f1c40f; margin: -2px 0; z-index: 1; }
+        .decor-tassel { display: flex; flex-direction: column; align-items: center; margin-top: -5px; }
+        .tassel-head { width: 16px; height: 12px; background: #f1c40f; border-radius: 4px 4px 0 0; }
+        .tassel-body {
+            width: 20px; height: 60px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px);
+            border-radius: 0 0 10px 10px; position: relative;
+        }
+        @keyframes sway { 0% { transform: rotate(2deg); } 100% { transform: rotate(-2deg); } }
+
+        /* --- CÂY ANH ĐÀO --- */
+        .cherry-tree-container {
+            position: absolute; bottom: 0; z-index: 10; pointer-events: none;
+            width: 500px; height: 600px;
+        }
+        .tree-left { left: -80px; bottom: -60px; transform-origin: bottom center; }
+        .tree-right { right: -80px; bottom: -60px; transform: scaleX(-1); transform-origin: bottom center; }
+        canvas.tree-canvas { width: 100%; height: 100%; }
+
+        @media (max-width: 768px) {
+            .tet-decor-container { transform: scale(0.7); top: -10px; }
+            .left-decor { left: 5px; } .right-decor { right: 5px; }
+            .cherry-tree-container { width: 300px; height: 450px; }
+            .tree-left { left: -60px; bottom: -30px; } 
+            .tree-right { right: -60px; bottom: -30px; }
+            .music-player { padding: 8px 12px; }
+        }
+
+        /* --- PHONG BÌ --- */
+        .envelope-container {
+            position: relative; width: 320px; height: 220px; perspective: 1000px;
+            cursor: pointer; margin-top: 150px;
+        }
+        .envelope-wrapper {
+            position: relative; width: 100%; height: 100%; background: var(--envelope-bg);
+            box-shadow: 0 20px 45px rgba(0,0,0,0.3); border-radius: 5px;
+        }
+        .envelope-flap { position: absolute; width: 0; height: 0; z-index: 5; }
+        .flap-left {
+            top: 0; left: 0; border-top: 110px solid transparent; border-bottom: 110px solid transparent;
+            border-left: 160px solid var(--envelope-flap); filter: brightness(0.9);
+        }
+        .flap-right {
+            top: 0; right: 0; border-top: 110px solid transparent; border-bottom: 110px solid transparent;
+            border-right: 160px solid var(--envelope-flap); filter: brightness(0.9);
+        }
+        .flap-bottom {
+            bottom: 0; left: 0; border-left: 160px solid transparent; border-right: 160px solid transparent;
+            border-bottom: 140px solid var(--envelope-flap); z-index: 6; filter: brightness(1.1);
+        }
+        .flap-top {
+            top: 0; left: 0; border-left: 160px solid transparent; border-right: 160px solid transparent;
+            border-top: 130px solid var(--envelope-top); z-index: 20; transform-origin: top;
+            transition: transform 0.6s ease-in-out 0.6s, z-index 0.2s linear 0.6s;
+        }
+        .letter-content {
+            position: absolute; bottom: 0; left: 50%; width: 300px; height: 380px; background: #fffdf5;
+            padding: 30px 25px; border-radius: 8px; box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
+            transform: translate(-50%, 0) scale(0.9); opacity: 0; z-index: 4; overflow-y: auto;
+            transition: transform 0.6s ease-in-out 0s, opacity 0.4s ease-in 0.5s;
+        }
+        .letter-content::-webkit-scrollbar { width: 0; }
+        .envelope-container.open .flap-top {
+            transform: rotateX(180deg); z-index: 1; transition: transform 0.6s ease-in-out 0s, z-index 0.2s linear 0.2s;
+        }
+        .envelope-container.open .letter-content {
+            transform: translate(-50%, -50px) scale(1.05); opacity: 1; z-index: 50;
+            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 0.4s ease-in 0.5s;
+        }
+        @media (max-width: 768px) {
+            .envelope-container { margin-top: 120px; }
+            .envelope-container.open .letter-content { transform: translate(-50%, -200px) scale(1); max-height: 400px; }
+        }
+
+        /* --- HỘP QUÀ --- */
+        .gift-container {
+            position: relative; width: 140px; height: 120px; cursor: pointer;
+            margin-bottom: 30px; z-index: 30; transition: transform 0.3s;
+        }
+        .gift-box {
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
+            background: #c0392b; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+            overflow: hidden; transition: opacity 0.5s ease-in-out 0.5s;
+        }
+        .gift-lid {
+            position: absolute; top: 0; left: -10px; width: 160px; height: 30px;
+            background: #e74c3c; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+            z-index: 2; transition: transform 1s ease-in-out, opacity 0.8s ease-in-out 0.2s;
+        }
+        .ribbon-body, .ribbon-lid {
+            position: absolute; top: 0; left: 50%; transform: translateX(-50%);
+            width: 24px; height: 100%; background: #f1c40f; border-left: 2px solid #f39c12; border-right: 2px solid #f39c12;
+        }
+        .gift-bow {
+            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
+            width: 60px; height: 30px; z-index: 3; transition: transform 1s ease-in-out, opacity 0.8s ease-in-out 0.2s;
+        }
+        .gift-bow::before, .gift-bow::after {
+            content: ''; position: absolute; bottom: 0; width: 30px; height: 35px;
+            border: 4px solid #f1c40f; border-radius: 50% 50% 0 50%;
+            background: radial-gradient(circle at center, transparent 40%, #f1c40f 41%);
+        }
+        .gift-bow::before { left: -15px; transform: rotate(10deg); }
+        .gift-bow::after { right: -15px; transform: rotate(-10deg) scaleX(-1); }
+        @keyframes shakeBox {
+            0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); }
+        }
+        .animate-shake { animation: shakeBox 2s infinite ease-in-out; }
+        .gift-container:hover { transform: scale(1.05); }
+        .gift-container.opening { animation: none; pointer-events: none; }
+        .gift-container.opening .gift-lid, .gift-container.opening .gift-bow {
+            transform: translateY(-120px) rotate(-15deg); opacity: 0;
+        }
+        .gift-container.opening .gift-box { opacity: 0; }
+
+        /* --- HOA RƠI --- */
+        .falling-flower { position: absolute; pointer-events: none; z-index: 5; opacity: 0.9; top: -50px; }
+
+        /* --- CÁC PHẦN KHÁC --- */
+        #fireworks-canvas {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 100; display: none;
+        }
+        #happy-new-year-text {
+            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
+            z-index: 150; text-align: center; display: none; pointer-events: none; width: 100%;
+        }
+        #happy-new-year-text h1 {
+            font-family: 'Dancing Script', cursive; font-size: 3.5rem; color: var(--gold);
+            text-shadow: 0 0 10px rgba(241, 196, 15, 0.8), 2px 2px 0px #c0392b;
+            opacity: 0; transform: scale(0.5); transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        @media (min-width: 768px) { #happy-new-year-text h1 { font-size: 6rem; } }
+        #happy-new-year-text.show h1 { opacity: 1; transform: scale(1); }
+        .final-message {
+            font-size: 1.3rem; color: #fff; opacity: 0; transition: opacity 2s ease 1s;
+            margin-top: 20px; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+        }
+        #happy-new-year-text.show .final-message { opacity: 1; }
+
+        .lixi-card {
+            width: 100px; height: 150px; background: #b01c20; border: 2px solid #f1c40f;
+            border-radius: 12px; margin: 10px; display: flex; align-items: center; justify-content: center;
+            cursor: pointer; font-size: 2.5rem; color: #f1c40f; position: relative;
+            transform-style: preserve-3d; transition: transform 0.6s; box-shadow: 0 8px 20px rgba(100, 30, 22, 0.4);
+            z-index: 40;
+        }
+        .lixi-card.flipped { transform: rotateY(180deg); }
+        .lixi-back {
+            position: absolute; width: 100%; height: 100%; background: #fffdf5;
+            backface-visibility: hidden; transform: rotateY(180deg); display: flex; align-items: center;
+            justify-content: center; color: #b01c20; padding: 10px; font-size: 0.9rem;
+            border-radius: 10px; font-weight: bold; text-align: center; border: 2px solid #b01c20;
+        }
+        #restart-btn-container {
+            position: fixed; bottom: 50px; left: 50%; transform: translateX(-50%);
+            z-index: 200; opacity: 0; transition: opacity 1s; display: none;
+        }
+    </style>
+</head>
+<body>
+
+    <canvas id="fireworks-canvas"></canvas>
+
+    <div class="music-player">
+        <div class="music-info" id="musicTitle">MUSIC</div>
+        <button class="music-btn" onclick="prevSong()" title="Lùi lại">
+            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="music-btn" id="playPauseBtn" onclick="togglePlay()" title="Phát/Dừng">
+            <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
+            <svg id="pauseIcon" viewBox="0 0 24 24" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
+        </button>
+        <button class="music-btn" onclick="nextSong()" title="Tiếp theo">
+            <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
+    </div>
+
+    <audio id="bgMusic" loop>
+        <source src="" type="audio/mpeg">
+    </audio>
+
+    <div class="tet-decor-container left-decor">
+        <div class="decor-string"></div>
+        <div class="decor-coin">Vạn</div> <div class="coin-connector"></div>
+        <div class="decor-coin">Sự</div> <div class="coin-connector"></div>
+        <div class="decor-coin">Như</div> <div class="coin-connector"></div>
+        <div class="decor-coin">Ý</div>
+        <div class="decor-tassel"><div class="tassel-head"></div><div class="tassel-body"></div></div>
+    </div>
+
+    <div class="tet-decor-container right-decor" style="animation-delay: 1s;">
+        <div class="decor-string"></div>
+        <div class="decor-coin">Chúc</div> <div class="coin-connector"></div>
+        <div class="decor-coin">Mừng</div> <div class="coin-connector"></div>
+        <div class="decor-coin">Năm</div> <div class="coin-connector"></div>
+        <div class="decor-coin">Mới</div>
+        <div class="decor-tassel"><div class="tassel-head"></div><div class="tassel-body"></div></div>
+    </div>
+
+    <div class="cherry-tree-container tree-left">
+        <canvas id="tree-canvas-left" class="tree-canvas"></canvas>
+    </div>
+    <div class="cherry-tree-container tree-right">
+        <canvas id="tree-canvas-right" class="tree-canvas"></canvas>
+    </div>
+
+    <section id="screen1" class="screen active">
+        <h2 class="text-4xl md:text-6xl mb-6 handwriting" style="color: #922b21; text-shadow: 2px 2px 4px rgba(255,255,255,0.4);">Chào em yêu,</h2>
+        <p class="text-xl md:text-2xl mb-8 font-medium" style="color: #7b241c;">Nắng xuân đã về, Valentine cũng tới ❤️<br>Anh có món quà nhỏ tặng em.</p>
+        <button class="btn-premium" onclick="startExperience()">MỞ QUÀ NGAY 🎁</button>
+    </section>
+
+    <section id="screen2" class="screen">
+        <h2 class="text-3xl mb-4 handwriting text-red-900 font-bold">Thư gửi vợ tương lai 💌</h2>
+        <div class="envelope-container" id="envelope" onclick="this.classList.toggle('open')">
+            <div class="envelope-wrapper">
+                <div class="letter-content">
+                    <p class="handwriting text-2xl text-red-700 font-bold mb-3 text-center">Gửi Em,</p>
+                    <p class="handwriting text-lg text-red-900 leading-relaxed text-justify">
+                        "Năm 2026 này, anh không chúc em giàu sang phú quý, chỉ chúc em mỗi ngày mở mắt ra đều thấy vui vẻ, và mỗi tối đi ngủ đều thấy bình yên (vì có anh).<br><br>
+                        Anh đã chuẩn bị sẵn những điều tuyệt vời nhất dành cho chúng mình. Cảm ơn em đã luôn ở bên anh.<br><br>
+                        Yêu em nhiều lắm! ❤️<br><br>
+                        <span class="text-sm block text-center text-gray-500 italic">(Bấm vào lá thư để đóng lại)</span>"
+                    </p>
+                    <div class="mt-8 text-right font-serif text-red-800 font-bold">Ký tên: Chồng của em</div>
+                </div>
+                <div class="envelope-flap flap-left"></div> <div class="envelope-flap flap-right"></div>
+                <div class="envelope-flap flap-bottom"></div> <div class="envelope-flap flap-top"></div>
+            </div>
+        </div>
+        <button class="btn-premium" style="margin-top: 150px;" onclick="nextPage(3)">TIẾP TỤC</button>
+    </section>
+
+    <section id="screen3" class="screen">
+        <div id="giftBox" class="gift-container animate-shake">
+            <div class="gift-bow"></div>
+            <div class="gift-lid"><div class="ribbon-lid"></div></div>
+            <div class="gift-box"><div class="ribbon-body"></div></div>
+        </div>
+        <h2 id="giftText" class="text-2xl handwriting font-bold text-red-800 mt-5">Chạm vào hộp quà để mở</h2>
+        <canvas id="heartCanvas" width="800" height="400" class="hidden" style="max-width: 95vw; height: auto;"></canvas>
+        <button id="btnGoLixi" class="btn-premium hidden" onclick="nextPage(4)">RÚT LÌ XÌ</button>
+    </section>
+
+   <section id="screen4" class="screen">
+        <h2 class="text-3xl mb-6 handwriting text-red-900 font-bold">Chọn 1 bao lì xì may mắn nhé! 🧧</h2>
+        <div class="flex flex-wrap justify-center max-w-4xl gap-4">
+            
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+        </div>
+        <button class="btn-premium mt-12" onclick="nextPage(5)">ĐÓN GIAO THỪA</button>
+    </section>
+
+    <div id="happy-new-year-text">
+        <h1>Happy Valentine's Day & Happy New Year<br>2026</h1>
+        <p class="final-message">Chúc mừng năm mới & Happy Valentine! ❤️</p>
+    </div>
+    <div id="restart-btn-container">
+        <button class="btn-premium" style="border-color: #ffd700;" onclick="location.reload()">XEM LẠI TỪ ĐẦU</button>
+    </div>
+
+    <script>
+        // ===========================================
+        // 1. QUẢN LÝ NHẠC
+        // ===========================================
+        const playlist = [
+            { title: "Next door", src: "next_door.mp3" },
+            { title: "Can You Love Me Tonight", src: "Can_You_Love_Me_Tonight.mp3" },
+            { title: "Say Yes", src: "Say_Yes.mp3" }
+        ];
+
+        let currentSongIndex = 0;
+        const audio = document.getElementById('bgMusic');
+        const playIcon = document.getElementById('playIcon');
+        const pauseIcon = document.getElementById('pauseIcon');
+        const musicTitle = document.getElementById('musicTitle');
+        let isPlaying = false;
+
+        audio.src = playlist[currentSongIndex].src;
+        musicTitle.innerText = playlist[currentSongIndex].title;
+
+        function togglePlay() {
+            if (isPlaying) {
+                audio.pause();
+                playIcon.style.display = 'block';
+                pauseIcon.style.display = 'none';
+            } else {
+                audio.play();
+                playIcon.style.display = 'none';
+                pauseIcon.style.display = 'block';
+            }
+            isPlaying = !isPlaying;
+        }
+
+        function nextSong() {
+            currentSongIndex = (currentSongIndex + 1) % playlist.length;
+            loadAndPlaySong();
+        }
+
+        function prevSong() {
+            currentSongIndex = (currentSongIndex - 1 + playlist.length) % playlist.length;
+            loadAndPlaySong();
+        }
+
+        function loadAndPlaySong() {
+            audio.src = playlist[currentSongIndex].src;
+            musicTitle.innerText = playlist[currentSongIndex].title;
+            if(isPlaying) audio.play();
+        }
+        
+        function startExperience() {
+            if(!isPlaying) togglePlay();
+            nextPage(2);
+        }
+
+        // ===========================================
+        // 2. LOGIC VẼ CÂY & HIỆU ỨNG 
+        // ===========================================
+        class CherryBlossomTree {
+            constructor(canvasId, options = {}) {
+                this.canvas = document.getElementById(canvasId);
+                this.ctx = this.canvas.getContext('2d');
+                this.width = this.canvas.width = this.canvas.offsetWidth * 2; 
+                this.height = this.canvas.height = this.canvas.offsetHeight * 2;
+                this.startLength = options.length || 160;
+                this.branchWidth = options.width || 14;
+                this.flowerColors = ["#ffcdd2", "#f8bbd0", "#f48fb1", "#ff80ab", "#ffffff"];
+                this.init();
+            }
+            init() { this.draw(); }
+            drawBranch(x, y, len, angle, width) {
+                this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(angle);
+                this.ctx.beginPath(); this.ctx.moveTo(0, 0); this.ctx.quadraticCurveTo(width, -len / 2, 0, -len);
+                this.ctx.lineWidth = width; this.ctx.lineCap = "round";
+                let grad = this.ctx.createLinearGradient(0, 0, width, 0);
+                grad.addColorStop(0, "#3e2723"); grad.addColorStop(0.5, "#6d4c41"); grad.addColorStop(1, "#3e2723");
+                this.ctx.strokeStyle = grad; this.ctx.stroke();
+                if (len < 15) { this.drawFlowers(); this.ctx.restore(); return; }
+                let subLen = len * 0.75; let subWidth = width * 0.7;
+                let angleLeft = -Math.PI / 4 + (Math.random() * 0.2); 
+                let angleRight = Math.PI / 4 - (Math.random() * 0.2);
+                this.drawBranch(0, -len, subLen, angleLeft, subWidth);
+                this.drawBranch(0, -len, subLen, angleRight, subWidth);
+                if (len > 40 && Math.random() > 0.6) { this.drawBranch(0, -len * 0.8, subLen * 0.6, 0, subWidth); }
+                this.ctx.restore();
+            }
+            drawFlowers() {
+                let count = 3 + Math.floor(Math.random() * 3);
+                for (let i = 0; i < count; i++) {
+                    let color = this.flowerColors[Math.floor(Math.random() * this.flowerColors.length)];
+                    let size = 4 + Math.random() * 6;
+                    let fX = (Math.random() - 0.5) * 30; let fY = (Math.random() - 0.5) * 25;
+                    this.ctx.beginPath(); this.ctx.arc(fX, fY, size, 0, Math.PI * 2);
+                    this.ctx.fillStyle = color; this.ctx.shadowBlur = 4;
+                    this.ctx.shadowColor = "rgba(255, 182, 193, 0.6)"; this.ctx.fill();
+                    this.ctx.beginPath(); this.ctx.arc(fX, fY, size * 0.2, 0, Math.PI * 2);
+                    this.ctx.fillStyle = "#ffeb3b"; this.ctx.fill();
+                }
+            }
+            draw() {
+                this.ctx.clearRect(0, 0, this.width, this.height);
+                this.drawBranch(this.width / 2, this.height, this.startLength, 0, this.branchWidth);
+            }
+        }
+
+        function nextPage(pageNumber) {
+            gsap.to(`.screen`, { opacity: 0, visibility: 'hidden', duration: 0.5 });
+            setTimeout(() => {
+                document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+                if(pageNumber === 5) {
+                    document.body.classList.add('night-mode'); triggerFireworksEnding();
+                } else {
+                    const nextScreen = document.getElementById(`screen${pageNumber}`);
+                    nextScreen.classList.add('active');
+                    gsap.to(nextScreen, { opacity: 1, visibility: 'visible', duration: 0.8 });
+                    if(pageNumber === 3) initHeartAnimation();
+                }
+            }, 500);
+        }
+
+        function createFlower() {
+            if(document.body.classList.contains('night-mode')) return; 
+            const flower = document.createElement('div'); flower.className = 'falling-flower';
+            const isSakura = Math.random() > 0.4; const size = Math.random() * 15 + 15;
+            flower.style.width = `${size}px`; flower.style.height = `${size}px`;
+            const startX = Math.random() * window.innerWidth; flower.style.left = `${startX}px`;
+            let svgContent = isSakura 
+                ? `<svg viewBox="0 0 30 30" fill="${["#ffb7b2", "#ffdac1", "#ff9aa2"][Math.floor(Math.random()*3)]}" style="width:100%;height:100%;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.1));"><path d="M15,30 C5,20 0,10 5,5 C8,2 12,5 15,10 C18,5 22,2 25,5 C30,10 25,20 15,30 Z" /></svg>`
+                : `<svg viewBox="0 0 30 30" fill="${["#c0392b", "#e74c3c", "#922b21"][Math.floor(Math.random()*3)]}" style="width:100%;height:100%;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.1));"><path d="M15,0 C25,5 30,15 20,25 C10,30 0,20 5,10 C8,5 12,2 15,0 Z" /></svg>`;
+            flower.innerHTML = svgContent; document.body.appendChild(flower);
+            gsap.to(flower, { y: window.innerHeight + 100, x: startX + (Math.random() - 0.5) * 200, rotation: Math.random() * 360, duration: Math.random() * 4 + 4, ease: "power1.out", onComplete: () => { flower.remove(); } });
+        }
+        setInterval(createFlower, 400);
+
+        function adjustColor(color, amount) { return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)); }
+
+        function drawChocolatePiece(ctx, x, y, type) {
+            ctx.save(); ctx.translate(x, y); ctx.fillStyle = "#fff5e6"; ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI*2); ctx.fill();
+            ctx.strokeStyle = "#e6ccb3"; ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
+            if(type === 'dark') {
+                let grd = ctx.createRadialGradient(-3, -3, 1, 0, 0, 10); grd.addColorStop(0, "#8d6e63"); grd.addColorStop(1, "#3e2723");
+                ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI*2); ctx.fill();
+            } else if (type === 'gold') {
+                let grd = ctx.createRadialGradient(-2, -2, 1, 0, 0, 9); grd.addColorStop(0, "#fff59d"); grd.addColorStop(0.5, "#fbc02d"); grd.addColorStop(1, "#f57f17");
+                ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(0, 0, 9, 0, Math.PI*2); ctx.fill();
+            } else if (type === 'square') {
+                let grd = ctx.createLinearGradient(-5, -5, 5, 5); grd.addColorStop(0, "#d7ccc8"); grd.addColorStop(1, "#795548");
+                ctx.fillStyle = grd; ctx.fillRect(-7, -7, 14, 14);
+            } else if (type === 'heart') {
+                ctx.fillStyle = "#f48fb1"; ctx.beginPath(); ctx.moveTo(0, 3);
+                ctx.bezierCurveTo(0, 1, -6, -5, -6, -8); ctx.bezierCurveTo(-6, -11, -3, -11, 0, -8);
+                ctx.bezierCurveTo(3, -11, 6, -11, 6, -8); ctx.bezierCurveTo(6, -5, 0, 1, 0, 3); ctx.fill();
+            }
+            ctx.restore();
+        }
+        function drawChocolateBox(ctx, x, y, scale, rotation) {
+            ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale); ctx.rotate(rotation * Math.PI / 180);
+            ctx.shadowColor = "rgba(0,0,0,0.3)"; ctx.shadowBlur = 15; ctx.shadowOffsetY = 10;
+            ctx.fillStyle = "#922b21"; ctx.beginPath(); ctx.moveTo(0, 20); ctx.bezierCurveTo(0, 15, -42, -20, -42, -45); ctx.bezierCurveTo(-42, -77, 0, -77, 0, -45); ctx.bezierCurveTo(0, -77, 42, -77, 42, -45); ctx.bezierCurveTo(42, -20, 0, 15, 0, 20); ctx.fill();
+            ctx.shadowColor = "transparent"; ctx.fillStyle = "#3E0E0E"; ctx.beginPath(); ctx.moveTo(0, 16); ctx.bezierCurveTo(0, 12, -38, -20, -38, -45); ctx.bezierCurveTo(-38, -73, -2, -73, 0, -48); ctx.bezierCurveTo(2, -73, 38, -73, 38, -45); ctx.bezierCurveTo(38, -20, 0, 12, 0, 16); ctx.fill();
+            ctx.strokeStyle = "#F1C40F"; ctx.lineWidth = 1; ctx.stroke();
+            drawChocolatePiece(ctx, -20, -50, 'dark'); drawChocolatePiece(ctx, 20, -50, 'square'); drawChocolatePiece(ctx, 0, -35, 'gold'); drawChocolatePiece(ctx, -12, -20, 'square'); drawChocolatePiece(ctx, 12, -20, 'dark'); drawChocolatePiece(ctx, 0, -5, 'heart');
+            ctx.restore();
+        }
+        function drawRealisticBouquet(ctx, x, y, scale, rotation) {
+            ctx.save(); ctx.translate(x, y); ctx.scale(scale, scale); ctx.rotate(rotation * Math.PI / 180);
+            ctx.fillStyle = "#1a1a1a"; ctx.beginPath(); ctx.moveTo(0, 110); ctx.lineTo(-70, -50); ctx.lineTo(70, -50); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "#222222"; ctx.beginPath(); ctx.moveTo(0, 100); ctx.lineTo(-60, -40); ctx.lineTo(30, -45); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "#2c2c2c"; ctx.beginPath(); ctx.moveTo(0, 100); ctx.lineTo(-45, -35); ctx.lineTo(45, -35); ctx.closePath(); ctx.fill();
+            ctx.fillStyle = "#f0f0f0"; ctx.fillRect(-18, 65, 36, 5); 
+            const leafColors = ["#2d5a27", "#3e7a37", "#1e3c1a"]; for(let i=0; i<15; i++) { ctx.fillStyle = leafColors[Math.floor(Math.random() * leafColors.length)]; ctx.beginPath(); ctx.ellipse((Math.random() - 0.5) * 100, (Math.random() * 50) - 60, 4, 8, Math.random() * Math.PI, 0, Math.PI * 2); ctx.fill(); }
+            const baseFlowerColors = ["#ff0055", "#ff3377", "#e6004c", "#ff6699", "#ff1a66"]; for(let i=0; i<35; i++) { const baseColor = baseFlowerColors[Math.floor(Math.random() * baseFlowerColors.length)]; const angle = Math.random() * Math.PI * 2; const r = Math.sqrt(Math.random()) * 45; const fX = Math.cos(angle) * r; const fY = Math.sin(angle) * r * 0.8 - 45; const size = 7 + Math.random()*5; const grd = ctx.createRadialGradient(fX, fY, size*0.1, fX, fY, size); grd.addColorStop(0, adjustColor(baseColor, -60)); grd.addColorStop(0.7, baseColor); ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(fX, fY, size, 0, Math.PI * 2); ctx.fill(); }
+            ctx.restore();
+        }
+        function initHeartAnimation() {
+            const giftBox = document.getElementById('giftBox'); const heartCanvas = document.getElementById('heartCanvas'); const giftText = document.getElementById('giftText'); const btnGoLixi = document.getElementById('btnGoLixi');
+            giftBox.onclick = () => {
+                giftBox.classList.add('opening'); giftText.innerText = "Đang mở món quà...";
+                setTimeout(() => {
+                    giftBox.classList.add('hidden'); giftText.innerText = "Trái tim này là của anh dành cho em ❤️"; heartCanvas.classList.remove('hidden');
+                    const ctx = heartCanvas.getContext('2d');
+                    drawRealisticBouquet(ctx, 150, 250, 1.2, -25); drawRealisticBouquet(ctx, 650, 250, 1.2, 25);
+                    drawChocolateBox(ctx, 150, 120, 1.4, -15); drawChocolateBox(ctx, 650, 120, 1.4, 15);
+                    let t = 0; function draw() { if (t > 2 * Math.PI) { btnGoLixi.classList.remove('hidden'); return; } const scale = 12; const x = 16 * Math.pow(Math.sin(t), 3); const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)); ctx.fillStyle = "#c0392b"; ctx.beginPath(); ctx.arc(x * scale + 400, y * scale + 180, 4, 0, Math.PI * 2); ctx.fill(); t += 0.05; requestAnimationFrame(draw); } draw();
+                }, 1200); 
+            };
+        }
+        function flipLixi(el) { el.classList.add('flipped'); el.style.pointerEvents = 'none'; }
+        function triggerFireworksEnding() {
+            const fCanvas = document.getElementById('fireworks-canvas'); const fctx = fCanvas.getContext('2d'); const nyText = document.getElementById('happy-new-year-text'); const restartBtn = document.getElementById('restart-btn-container');
+            fCanvas.style.display = "block"; nyText.style.display = "block"; setTimeout(() => { nyText.classList.add('show'); restartBtn.style.display = "block"; setTimeout(() => { restartBtn.style.opacity = 1; }, 3000); }, 500);
+            fCanvas.width = window.innerWidth; fCanvas.height = window.innerHeight;
+            let fwParticles = [];
+            function animateFW() {
+                fctx.fillStyle = 'rgba(15, 12, 41, 0.2)'; fctx.fillRect(0, 0, fCanvas.width, fCanvas.height);
+                if (Math.random() < 0.1) { let x = Math.random() * fCanvas.width; let y = Math.random() * fCanvas.height * 0.5; let color = `hsl(${Math.random() * 360}, 100%, 60%)`; for(let i=0; i<50; i++) { fwParticles.push({ x, y, color, vel: { x: (Math.random() - 0.5) * 6, y: (Math.random() - 0.5) * 6 }, alpha: 1, decay: Math.random() * 0.02 + 0.01 }); } }
+                fwParticles.forEach((p, i) => { p.x += p.vel.x; p.y += p.vel.y; p.vel.y += 0.05; p.alpha -= p.decay; if (p.alpha <= 0) fwParticles.splice(i, 1); else { fctx.globalAlpha = p.alpha; fctx.beginPath(); fctx.arc(p.x, p.y, 2.5, 0, Math.PI * 2); fctx.fillStyle = p.color; fctx.fill(); } });
+                requestAnimationFrame(animateFW);
+            }
+            animateFW();
+        }
+        window.addEventListener('resize', () => { const fCanvas = document.getElementById('fireworks-canvas'); if(fCanvas.style.display === 'block') { fCanvas.width = window.innerWidth; fCanvas.height = window.innerHeight; } });
+
+        // ===========================================
+        // 3. RANDOM LÌ XÌ (LOGIC MỚI)
+        // ===========================================
+        const giftList = [
+            "10k<br>",
+            "20k<br>",
+            "50k<br>",
+            "100k<br>",
+            "200k<br>"
+        ];
+
+        window.addEventListener('load', () => {
+            // 1. Tạo cây
+            new CherryBlossomTree('tree-canvas-left', { length: 130, width: 14 });
+            new CherryBlossomTree('tree-canvas-right', { length: 140, width: 15 });
+
+            // 2. Random quà
+            randomizeLixi();
+        });
+
+        function randomizeLixi() {
+            // Thuật toán xáo trộn mảng (Fisher-Yates Shuffle)
+            for (let i = giftList.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [giftList[i], giftList[j]] = [giftList[j], giftList[i]];
+            }
+
+            // Gán nội dung đã xáo trộn vào các bao lì xì
+            const lixiElements = document.querySelectorAll('.lixi-back');
+            lixiElements.forEach((el, index) => {
+                if (giftList[index]) {
+                    el.innerHTML = giftList[index];
+                }
+            });
+        }
+    </script>
+</body>
+</html>
