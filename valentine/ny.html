@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, user-scalable=yes">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Love & Luck 2026 | Valentine x Tết</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Montserrat:wght@300;400&family=Pangolin&display=swap" rel="stylesheet">
@@ -60,6 +60,7 @@
         .music-btn svg { width: 24px; height: 24px; fill: currentColor; }
         .music-info { font-size: 0.8rem; font-weight: bold; color: #922b21; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.5s; opacity: 0; }
         .music-player:hover .music-info { max-width: 150px; opacity: 1; margin-right: 10px; }
+        /* Đổi màu chữ nhạc khi chế độ ban đêm */
         body.night-mode .music-btn { color: #f1c40f; }
         body.night-mode .music-info { color: #fff; }
 
@@ -106,27 +107,6 @@
             .tree-right { right: -60px; bottom: -30px; }
             .music-player { padding: 8px 12px; }
         }
-
-        /* --- ZOOM CONTROLS (NEW) --- */
-        .zoom-controls {
-            position: fixed; top: 50%; right: 15px; transform: translateY(-50%);
-            display: flex; flex-direction: column; gap: 15px; z-index: 300;
-        }
-        .zoom-btn {
-            width: 45px; height: 45px; border-radius: 50%;
-            background: rgba(255, 255, 255, 0.9); border: 2px solid #c0392b;
-            color: #c0392b; font-size: 1.5rem; font-weight: bold; cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.2);
-            display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s; user-select: none;
-        }
-        .zoom-btn:active { transform: scale(0.9); background: #c0392b; color: white; }
-        .zoomable-content {
-            transition: transform 0.3s ease-out;
-            display: flex; justify-content: center; align-items: center;
-            transform-origin: center center;
-        }
-        body.night-mode .zoom-controls { display: none; }
 
         /* --- PHONG BÌ --- */
         .envelope-container {
@@ -265,12 +245,6 @@
 
     <canvas id="fireworks-canvas"></canvas>
 
-    <div class="zoom-controls">
-        <button class="zoom-btn" onclick="adjustZoom(0.1)">+</button>
-        <button class="zoom-btn" onclick="resetZoom()">⟲</button>
-        <button class="zoom-btn" onclick="adjustZoom(-0.1)">-</button>
-    </div>
-
     <div class="music-player">
         <div class="music-info" id="musicTitle">MUSIC</div>
         <button class="music-btn" onclick="prevSong()" title="Lùi lại">
@@ -286,7 +260,7 @@
     </div>
 
     <audio id="bgMusic" loop>
-        <source src="song1.mp3" type="audio/mpeg">
+        <source src="" type="audio/mpeg">
     </audio>
 
     <div class="tet-decor-container left-decor">
@@ -322,78 +296,66 @@
 
     <section id="screen2" class="screen">
         <h2 class="text-3xl mb-4 handwriting text-red-900 font-bold">Thư gửi vợ tương lai 💌</h2>
-        
-        <div class="zoomable-content">
-            <div class="envelope-container" id="envelope" onclick="this.classList.toggle('open')">
-                <div class="envelope-wrapper">
-                    <div class="letter-content">
-                        <p class="handwriting text-2xl text-red-700 font-bold mb-3 text-center">Gửi Em,</p>
-                        <p class="handwriting text-lg text-red-900 leading-relaxed text-justify">
-                            "Năm 2026 này, anh không chúc em giàu sang phú quý, chỉ chúc em mỗi ngày mở mắt ra đều thấy vui vẻ, và mỗi tối đi ngủ đều thấy bình yên (vì có anh).<br><br>
-                            Anh đã chuẩn bị sẵn những điều tuyệt vời nhất dành cho chúng mình. Cảm ơn em đã luôn ở bên anh.<br><br>
-                            Yêu em nhiều lắm! ❤️<br><br>
-                            <span class="text-sm block text-center text-gray-500 italic">(Bấm vào lá thư để đóng lại)</span>"
-                        </p>
-                        <div class="mt-8 text-right font-serif text-red-800 font-bold">Ký tên: Chồng của em</div>
-                    </div>
-                    <div class="envelope-flap flap-left"></div> <div class="envelope-flap flap-right"></div>
-                    <div class="envelope-flap flap-bottom"></div> <div class="envelope-flap flap-top"></div>
+        <div class="envelope-container" id="envelope" onclick="this.classList.toggle('open')">
+            <div class="envelope-wrapper">
+                <div class="letter-content">
+                    <p class="handwriting text-2xl text-red-700 font-bold mb-3 text-center">Gửi Em,</p>
+                    <p class="handwriting text-lg text-red-900 leading-relaxed text-justify">
+                        "Năm 2026 này, anh không chúc em giàu sang phú quý, chỉ chúc em mỗi ngày mở mắt ra đều thấy vui vẻ, và mỗi tối đi ngủ đều thấy bình yên (vì có anh).<br><br>
+                        Anh đã chuẩn bị sẵn những điều tuyệt vời nhất dành cho chúng mình. Cảm ơn em đã luôn ở bên anh.<br><br>
+                        Yêu em nhiều lắm! ❤️<br><br>
+                        <span class="text-sm block text-center text-gray-500 italic">(Bấm vào lá thư để đóng lại)</span>"
+                    </p>
+                    <div class="mt-8 text-right font-serif text-red-800 font-bold">Ký tên: Chồng của em</div>
                 </div>
+                <div class="envelope-flap flap-left"></div> <div class="envelope-flap flap-right"></div>
+                <div class="envelope-flap flap-bottom"></div> <div class="envelope-flap flap-top"></div>
             </div>
         </div>
-
         <button class="btn-premium" style="margin-top: 150px;" onclick="nextPage(3)">TIẾP TỤC</button>
     </section>
 
     <section id="screen3" class="screen">
-        <div class="zoomable-content" style="display: flex; flex-direction: column; align-items: center;">
-            <div id="giftBox" class="gift-container animate-shake">
-                <div class="gift-bow"></div>
-                <div class="gift-lid"><div class="ribbon-lid"></div></div>
-                <div class="gift-box"><div class="ribbon-body"></div></div>
-            </div>
-            
-            <canvas id="heartCanvas" width="800" height="400" class="hidden" style="max-width: 95vw; height: auto;"></canvas>
+        <div id="giftBox" class="gift-container animate-shake">
+            <div class="gift-bow"></div>
+            <div class="gift-lid"><div class="ribbon-lid"></div></div>
+            <div class="gift-box"><div class="ribbon-body"></div></div>
         </div>
-
         <h2 id="giftText" class="text-2xl handwriting font-bold text-red-800 mt-5">Chạm vào hộp quà để mở</h2>
+        <canvas id="heartCanvas" width="800" height="400" class="hidden" style="max-width: 95vw; height: auto;"></canvas>
         <button id="btnGoLixi" class="btn-premium hidden" onclick="nextPage(4)">RÚT LÌ XÌ</button>
     </section>
 
    <section id="screen4" class="screen">
         <h2 class="text-3xl mb-6 handwriting text-red-900 font-bold">Chọn 1 bao lì xì may mắn nhé! 🧧</h2>
-        
-        <div class="zoomable-content">
-            <div class="flex flex-wrap justify-center max-w-4xl gap-4">
-                
-                <div class="lixi-card" onclick="flipLixi(this)">
-                    🧧
-                    <div class="lixi-back">...</div>
-                </div>
-
-                <div class="lixi-card" onclick="flipLixi(this)">
-                    🧧
-                    <div class="lixi-back">...</div>
-                </div>
-
-                <div class="lixi-card" onclick="flipLixi(this)">
-                    🧧
-                    <div class="lixi-back">...</div>
-                </div>
-
-                <div class="lixi-card" onclick="flipLixi(this)">
-                    🧧
-                    <div class="lixi-back">...</div>
-                </div>
-
-                <div class="lixi-card" onclick="flipLixi(this)">
-                    🧧
-                    <div class="lixi-back">...</div>
-                </div>
-
+        <div class="flex flex-wrap justify-center max-w-4xl gap-4">
+            
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
             </div>
-        </div>
 
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+        </div>
         <button class="btn-premium mt-12" onclick="nextPage(5)">ĐÓN GIAO THỪA</button>
     </section>
 
@@ -422,9 +384,8 @@
         const musicTitle = document.getElementById('musicTitle');
         let isPlaying = false;
 
-        // Init Music Info (User cần tự thay file nhạc)
+        audio.src = playlist[currentSongIndex].src;
         musicTitle.innerText = playlist[currentSongIndex].title;
-        // audio.src = playlist[currentSongIndex].src; // Uncomment khi có file nhạc
 
         function togglePlay() {
             if (isPlaying) {
@@ -432,7 +393,7 @@
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
             } else {
-                audio.play().catch(e => console.log("Cần tương tác user để phát nhạc"));
+                audio.play();
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
             }
@@ -510,32 +471,6 @@
             }
         }
 
-        // --- CÁC HÀM XỬ LÝ ZOOM & CHUYỂN TRANG ---
-        let currentScale = 1.0;
-
-        function adjustZoom(delta) {
-            const newScale = currentScale + delta;
-            if (newScale >= 0.5 && newScale <= 2.0) {
-                currentScale = newScale;
-                applyZoom();
-            }
-        }
-
-        function resetZoom() {
-            currentScale = 1.0;
-            applyZoom();
-        }
-
-        function applyZoom() {
-            const activeScreen = document.querySelector('.screen.active');
-            if (activeScreen) {
-                const target = activeScreen.querySelector('.zoomable-content');
-                if (target) {
-                    target.style.transform = `scale(${currentScale})`;
-                }
-            }
-        }
-
         function nextPage(pageNumber) {
             gsap.to(`.screen`, { opacity: 0, visibility: 'hidden', duration: 0.5 });
             setTimeout(() => {
@@ -545,7 +480,6 @@
                 } else {
                     const nextScreen = document.getElementById(`screen${pageNumber}`);
                     nextScreen.classList.add('active');
-                    resetZoom(); // Reset zoom khi sang trang mới
                     gsap.to(nextScreen, { opacity: 1, visibility: 'visible', duration: 0.8 });
                     if(pageNumber === 3) initHeartAnimation();
                 }
@@ -656,10 +590,13 @@
         });
 
         function randomizeLixi() {
+            // Thuật toán xáo trộn mảng (Fisher-Yates Shuffle)
             for (let i = giftList.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [giftList[i], giftList[j]] = [giftList[j], giftList[i]];
             }
+
+            // Gán nội dung đã xáo trộn vào các bao lì xì
             const lixiElements = document.querySelectorAll('.lixi-back');
             lixiElements.forEach((el, index) => {
                 if (giftList[index]) {
