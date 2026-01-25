@@ -2,7 +2,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Love & Luck 2026 | Valentine x Tết</title>
     
     <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Quicksand:wght@400;600&family=Montserrat:wght@300;400&family=Pangolin&display=swap" rel="stylesheet">
@@ -16,33 +16,28 @@
             --envelope-bg: #922b21; --envelope-flap: #d35400; --envelope-top: #e74c3c;
         }
         
-        * { box-sizing: border-box; }
-
         body {
-            margin: 0; 
-            overflow: hidden; 
-            font-family: 'Quicksand', sans-serif;
+            margin: 0; padding: 0; overflow: hidden; font-family: 'Quicksand', sans-serif;
             background: radial-gradient(circle at center, #fff0f0 0%, #ffdde1 40%, #ee9ca7 100%);
-            color: var(--dark-text); 
-            transition: background 2s ease; 
+            color: var(--dark-text); transition: background 2s ease;
             /* Fix lỗi chiều cao trên mobile */
+            height: 100vh; /* Fallback */
             height: 100dvh; 
             width: 100vw;
-            touch-action: manipulation; /* Ngăn zoom không mong muốn */
+            position: relative;
         }
         body.night-mode { background: linear-gradient(to bottom, #240b36, #c31432); color: white; }
 
-        /* --- MÀN HÌNH CHÍNH --- */
         .screen {
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             visibility: hidden; opacity: 0; text-align: center; padding: 15px; z-index: 20;
-            transition: opacity 0.8s ease, visibility 0.8s;
+            box-sizing: border-box; /* Đảm bảo padding không làm vỡ khung */
         }
         .active { visibility: visible; opacity: 1; }
         .handwriting { font-family: 'Dancing Script', cursive; }
         
-        /* --- BUTTON --- */
+        /* Button Style */
         .btn-premium {
             background: linear-gradient(135deg, #c0392b, #8e44ad);
             padding: 12px 30px; border-radius: 50px; color: white; font-weight: bold; font-size: 1rem;
@@ -51,88 +46,87 @@
             z-index: 50; position: relative; letter-spacing: 1px; white-space: nowrap;
         }
         .btn-premium:hover { transform: scale(1.05); box-shadow: 0 6px 25px rgba(192, 57, 43, 0.6); }
-        .btn-premium:active { transform: scale(0.95); }
 
         /* --- MUSIC PLAYER --- */
         .music-player {
             position: fixed; bottom: 20px; left: 20px; z-index: 200;
-            background: rgba(255, 255, 255, 0.3); backdrop-filter: blur(8px);
-            padding: 8px 12px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.4);
+            background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
+            padding: 8px 12px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3);
             display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
         }
         .music-btn {
             background: none; border: none; cursor: pointer; color: #c0392b;
             font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-            transition: transform 0.2s; width: 28px; height: 28px; padding: 0;
+            width: 28px; height: 28px;
         }
         .music-btn svg { width: 20px; height: 20px; fill: currentColor; }
         .music-info { font-size: 0.75rem; font-weight: bold; color: #922b21; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.5s; opacity: 0; }
-        .music-player:hover .music-info { max-width: 120px; opacity: 1; margin-right: 5px; }
+        .music-player.playing .music-info, .music-player:hover .music-info { max-width: 120px; opacity: 1; margin-right: 5px; }
         body.night-mode .music-btn { color: #f1c40f; }
         body.night-mode .music-info { color: #fff; }
 
-        /* --- DECOR TẾT --- */
+        /* --- DECOR TẾT (Responsive) --- */
         .tet-decor-container {
-            position: fixed; top: -10px; z-index: 15; /* Giảm z-index để không che nút */
-            display: flex; flex-direction: column; align-items: center; 
-            animation: sway 3s ease-in-out infinite alternate; pointer-events: none;
+            position: fixed; top: -10px; z-index: 60; display: flex; flex-direction: column;
+            align-items: center; pointer-events: none;
+            /* Animation nhẹ hơn */
+            animation: sway 3s ease-in-out infinite alternate;
             transform-origin: top center;
         }
-        .left-decor { left: 20px; } .right-decor { right: 20px; }
-        .decor-string { width: 2px; height: 40px; background: #b01c20; }
+        .left-decor { left: 10px; } 
+        .right-decor { right: 10px; }
+        
+        /* Mobile Scaling cho Decor */
+        @media (max-width: 768px) {
+            .tet-decor-container { transform: scale(0.6); top: -20px; }
+            .left-decor { left: -10px; } /* Đẩy sát lề hơn */
+            .right-decor { right: -10px; }
+        }
+
+        .decor-string { width: 2px; height: 40px; background: #b01c20; } /* Dây ngắn lại xíu */
         .decor-coin {
             width: 40px; height: 40px; background: #d00000; border: 2px solid #f1c40f;
             border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #f1c40f; font-family: 'Pangolin', cursive; font-size: 0.9rem; font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; margin-bottom: 3px; z-index: 2;
+            color: #f1c40f; font-family: 'Pangolin', cursive; font-size: 1rem; font-weight: bold;
+            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; margin-bottom: 4px; z-index: 2;
         }
         .decor-coin::before {
             content: ''; position: absolute; top: 2px; left: 2px; right: 2px; bottom: 2px;
             border: 1px dashed rgba(241, 196, 15, 0.5); border-radius: 50%;
         }
-        .coin-connector { width: 4px; height: 8px; background: #f1c40f; margin: -2px 0; z-index: 1; }
-        .decor-tassel { display: flex; flex-direction: column; align-items: center; margin-top: -5px; }
-        .tassel-head { width: 14px; height: 10px; background: #f1c40f; border-radius: 4px 4px 0 0; }
+        .coin-connector { width: 3px; height: 8px; background: #f1c40f; margin: -2px 0; z-index: 1; }
+        .decor-tassel { display: flex; flex-direction: column; align-items: center; margin-top: -4px; }
+        .tassel-head { width: 12px; height: 10px; background: #f1c40f; border-radius: 4px 4px 0 0; }
         .tassel-body {
-            width: 18px; height: 50px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px);
+            width: 16px; height: 50px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px);
             border-radius: 0 0 10px 10px;
         }
-        @keyframes sway { 0% { transform: rotate(2deg); } 100% { transform: rotate(-2deg); } }
+        @keyframes sway { 0% { transform: rotate(2deg) scale(var(--s, 1)); } 100% { transform: rotate(-2deg) scale(var(--s, 1)); } }
 
-        /* --- CÂY ANH ĐÀO --- */
+        /* --- CÂY ANH ĐÀO (Responsive) --- */
         .cherry-tree-container {
-            position: absolute; bottom: 0; z-index: 5; pointer-events: none;
+            position: absolute; bottom: 0; z-index: 10; pointer-events: none;
             width: 400px; height: 500px;
         }
-        .tree-left { left: -50px; bottom: -40px; transform-origin: bottom center; }
-        .tree-right { right: -50px; bottom: -40px; transform: scaleX(-1); transform-origin: bottom center; }
+        .tree-left { left: -60px; bottom: -40px; transform-origin: bottom center; }
+        .tree-right { right: -60px; bottom: -40px; transform: scaleX(-1); transform-origin: bottom center; }
         canvas.tree-canvas { width: 100%; height: 100%; }
 
-        /* --- MEDIA QUERY CHO MOBILE (Quan trọng) --- */
         @media (max-width: 768px) {
-            /* Decor Tết nhỏ lại và sát góc hơn */
-            .tet-decor-container { transform: scale(0.65); top: -5px; }
-            .left-decor { left: -5px; } .right-decor { right: -5px; }
-
-            /* Cây anh đào nhỏ lại, đẩy ra biên để không che nội dung giữa */
-            .cherry-tree-container { width: 220px; height: 350px; opacity: 0.8; }
-            .tree-left { left: -60px; bottom: -20px; } 
-            .tree-right { right: -60px; bottom: -20px; }
-
-            /* Music player nhỏ gọn */
-            .music-player { bottom: 15px; left: 15px; padding: 6px 10px; }
-            
-            /* Text size */
-            h2.handwriting { font-size: 2rem !important; }
-            p.text-xl { font-size: 1rem !important; padding: 0 20px; }
+            .cherry-tree-container { width: 220px; height: 320px; } /* Nhỏ hơn nữa trên mobile */
+            .tree-left { left: -50px; bottom: -20px; } 
+            .tree-right { right: -50px; bottom: -20px; }
+            /* Thêm css variable để giữ scale cho animation decor */
+            .tet-decor-container { --s: 0.6; } 
         }
 
-        /* --- PHONG BÌ --- */
+        /* --- PHONG BÌ (Responsive) --- */
         .envelope-container {
             position: relative; width: 300px; height: 200px; perspective: 1000px;
-            cursor: pointer; margin-bottom: 20px; /* Bỏ margin-top, dùng margin-bottom để tách nút */
-            flex-shrink: 0; /* Không bị bóp méo */
+            cursor: pointer; margin-top: 100px; /* Giảm margin top */
+            max-width: 90vw; /* Không bao giờ vượt quá chiều ngang màn hình */
         }
         .envelope-wrapper {
             position: relative; width: 100%; height: 100%; background: var(--envelope-bg);
@@ -156,62 +150,64 @@
             border-top: 120px solid var(--envelope-top); z-index: 20; transform-origin: top;
             transition: transform 0.6s ease-in-out 0.6s, z-index 0.2s linear 0.6s;
         }
-        /* Nội dung thư */
         .letter-content {
-            position: absolute; bottom: 0; left: 50%; width: 280px; height: 350px; background: #fffdf5;
+            position: absolute; bottom: 0; left: 50%; width: 280px; height: 340px; background: #fffdf5;
             padding: 20px; border-radius: 8px; box-shadow: 0 -5px 25px rgba(0,0,0,0.15);
             transform: translate(-50%, 0) scale(0.9); opacity: 0; z-index: 4; overflow-y: auto;
             transition: transform 0.6s ease-in-out 0s, opacity 0.4s ease-in 0.5s;
-            display: flex; flex-direction: column;
         }
-        .letter-content::-webkit-scrollbar { width: 0; }
+        .letter-content::-webkit-scrollbar { width: 2px; }
+        
         .envelope-container.open .flap-top {
             transform: rotateX(180deg); z-index: 1; transition: transform 0.6s ease-in-out 0s, z-index 0.2s linear 0.2s;
         }
         .envelope-container.open .letter-content {
-            transform: translate(-50%, -40px) scale(1); opacity: 1; z-index: 50;
+            /* Fix: Giảm độ bay lên để không bị cắt trên mobile */
+            transform: translate(-50%, -80px) scale(1); opacity: 1; z-index: 50;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 0.4s ease-in 0.5s;
         }
-        /* Mobile Envelope Tweak */
         @media (max-width: 768px) {
-            .envelope-container { transform: scale(0.9); }
-            .envelope-container.open .letter-content { 
-                transform: translate(-50%, -60px) scale(0.95); 
-                height: 300px; /* Ngắn lại để không tràn màn hình */
-            }
+            /* Tùy chỉnh riêng cho mobile để bao thư vừa vặn */
+            .envelope-container { width: 280px; height: 180px; margin-top: 80px; }
+            .flap-left { border-left-width: 140px; border-top-width: 90px; border-bottom-width: 90px; }
+            .flap-right { border-right-width: 140px; border-top-width: 90px; border-bottom-width: 90px; }
+            .flap-bottom { border-bottom-width: 110px; border-left-width: 140px; border-right-width: 140px; }
+            .flap-top { border-top-width: 100px; border-left-width: 140px; border-right-width: 140px; }
+            .letter-content { width: 260px; height: 300px; padding: 15px; }
+            .envelope-container.open .letter-content { transform: translate(-50%, -60px) scale(1); } /* Bay thấp hơn */
         }
 
         /* --- HỘP QUÀ --- */
         .gift-container {
-            position: relative; width: 140px; height: 120px; cursor: pointer;
+            position: relative; width: 120px; height: 100px; cursor: pointer;
             margin-bottom: 20px; z-index: 30; transition: transform 0.3s;
         }
         .gift-box {
-            position: absolute; bottom: 0; left: 0; width: 100%; height: 100px;
+            position: absolute; bottom: 0; left: 0; width: 100%; height: 80px;
             background: #c0392b; border-radius: 4px; box-shadow: 0 10px 20px rgba(0,0,0,0.2);
             overflow: hidden; transition: opacity 0.5s ease-in-out 0.5s;
         }
         .gift-lid {
-            position: absolute; top: 0; left: -10px; width: 160px; height: 30px;
+            position: absolute; top: 0; left: -10px; width: 140px; height: 25px;
             background: #e74c3c; border-radius: 4px; box-shadow: 0 4px 10px rgba(0,0,0,0.1);
             z-index: 2; transition: transform 1s ease-in-out, opacity 0.8s ease-in-out 0.2s;
         }
         .ribbon-body, .ribbon-lid {
             position: absolute; top: 0; left: 50%; transform: translateX(-50%);
-            width: 24px; height: 100%; background: #f1c40f; border-left: 2px solid #f39c12; border-right: 2px solid #f39c12;
+            width: 20px; height: 100%; background: #f1c40f; border-left: 2px solid #f39c12; border-right: 2px solid #f39c12;
         }
         .gift-bow {
-            position: absolute; top: -25px; left: 50%; transform: translateX(-50%);
-            width: 60px; height: 30px; z-index: 3; transition: transform 1s ease-in-out, opacity 0.8s ease-in-out 0.2s;
+            position: absolute; top: -20px; left: 50%; transform: translateX(-50%);
+            width: 50px; height: 25px; z-index: 3; transition: transform 1s ease-in-out, opacity 0.8s ease-in-out 0.2s;
         }
         .gift-bow::before, .gift-bow::after {
-            content: ''; position: absolute; bottom: 0; width: 30px; height: 35px;
+            content: ''; position: absolute; bottom: 0; width: 25px; height: 30px;
             border: 4px solid #f1c40f; border-radius: 50% 50% 0 50%;
             background: radial-gradient(circle at center, transparent 40%, #f1c40f 41%);
         }
-        .gift-bow::before { left: -15px; transform: rotate(10deg); }
-        .gift-bow::after { right: -15px; transform: rotate(-10deg) scaleX(-1); }
+        .gift-bow::before { left: -12px; transform: rotate(10deg); }
+        .gift-bow::after { right: -12px; transform: rotate(-10deg) scaleX(-1); }
         @keyframes shakeBox {
             0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); }
         }
@@ -226,13 +222,13 @@
         /* --- HOA RƠI --- */
         .falling-flower { position: absolute; pointer-events: none; z-index: 5; opacity: 0.9; top: -50px; }
 
-        /* --- PHÁO HOA & TEXT --- */
+        /* --- CÁC PHẦN KHÁC --- */
         #fireworks-canvas {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 100; display: none;
         }
         #happy-new-year-text {
-            position: fixed; top: 45%; left: 50%; transform: translate(-50%, -50%);
+            position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
             z-index: 150; text-align: center; display: none; pointer-events: none; width: 90%;
         }
         #happy-new-year-text h1 {
@@ -245,22 +241,17 @@
         #happy-new-year-text.show h1 { opacity: 1; transform: scale(1); }
         .final-message {
             font-size: 1.1rem; color: #fff; opacity: 0; transition: opacity 2s ease 1s;
-            margin-top: 20px; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+            margin-top: 15px; font-weight: 300; text-shadow: 0 2px 4px rgba(0,0,0,0.5);
         }
         #happy-new-year-text.show .final-message { opacity: 1; }
 
-        /* --- LÌ XÌ CARDS --- */
-        .lixi-grid {
-            display: flex; flex-wrap: wrap; justify-content: center; gap: 10px; max-width: 90vw;
-        }
         .lixi-card {
             width: 80px; height: 120px; background: #b01c20; border: 2px solid #f1c40f;
-            border-radius: 8px; display: flex; align-items: center; justify-content: center;
+            border-radius: 8px; margin: 5px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 2rem; color: #f1c40f; position: relative;
             transform-style: preserve-3d; transition: transform 0.6s; box-shadow: 0 5px 15px rgba(100, 30, 22, 0.4);
             z-index: 40;
         }
-        @media (min-width: 768px) { .lixi-card { width: 100px; height: 150px; margin: 10px; } }
         .lixi-card.flipped { transform: rotateY(180deg); }
         .lixi-back {
             position: absolute; width: 100%; height: 100%; background: #fffdf5;
@@ -269,8 +260,8 @@
             border-radius: 6px; font-weight: bold; text-align: center; border: 2px solid #b01c20;
         }
         #restart-btn-container {
-            position: fixed; bottom: 30px; left: 50%; transform: translateX(-50%);
-            z-index: 200; opacity: 0; transition: opacity 1s; display: none; width: 100%; text-align: center;
+            position: fixed; bottom: 80px; left: 50%; transform: translateX(-50%);
+            z-index: 200; opacity: 0; transition: opacity 1s; display: none;
         }
     </style>
 </head>
@@ -278,14 +269,18 @@
 
     <canvas id="fireworks-canvas"></canvas>
 
-    <div class="music-player">
+    <div class="music-player" id="musicPlayer">
         <div class="music-info" id="musicTitle">MUSIC</div>
-        <button class="music-btn" onclick="prevSong()"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg></button>
-        <button class="music-btn" id="playPauseBtn" onclick="togglePlay()">
+        <button class="music-btn" onclick="prevSong()" title="Lùi lại">
+            <svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6l8.5 6V6z"/></svg>
+        </button>
+        <button class="music-btn" id="playPauseBtn" onclick="togglePlay()" title="Phát/Dừng">
             <svg id="playIcon" viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>
             <svg id="pauseIcon" viewBox="0 0 24 24" style="display: none;"><path d="M6 19h4V5H6v14zm8-14v14h4V5h-4z"/></svg>
         </button>
-        <button class="music-btn" onclick="nextSong()"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+        <button class="music-btn" onclick="nextSong()" title="Tiếp theo">
+            <svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg>
+        </button>
     </div>
 
     <audio id="bgMusic" loop>
@@ -318,34 +313,32 @@
     </div>
 
     <section id="screen1" class="screen active">
-        <div class="relative z-10 flex flex-col items-center">
-            <h2 class="text-4xl md:text-6xl mb-4 handwriting text-red-900 drop-shadow-md">Chào em yêu,</h2>
-            <p class="text-xl md:text-2xl mb-6 font-medium text-red-800 max-w-md">
-                Nắng xuân đã về, Valentine cũng tới ❤️<br>Anh có món quà nhỏ tặng em.
-            </p>
+        <div class="relative z-50 px-8">
+            <h2 class="text-4xl md:text-6xl mb-4 handwriting" style="color: #922b21; text-shadow: 2px 2px 4px rgba(255,255,255,0.4);">Chào em yêu,</h2>
+            <p class="text-lg md:text-2xl mb-6 font-medium" style="color: #7b241c;">Nắng xuân đã về, Valentine cũng tới ❤️<br>Anh có món quà nhỏ tặng em.</p>
             <button class="btn-premium" onclick="startExperience()">MỞ QUÀ NGAY 🎁</button>
         </div>
     </section>
 
     <section id="screen2" class="screen">
-        <h2 class="text-3xl mb-6 handwriting text-red-900 font-bold">Thư gửi vợ tương lai 💌</h2>
+        <h2 class="text-2xl md:text-3xl mb-2 handwriting text-red-900 font-bold mt-[-40px]">Thư gửi vợ tương lai 💌</h2>
         <div class="envelope-container" id="envelope" onclick="this.classList.toggle('open')">
             <div class="envelope-wrapper">
                 <div class="letter-content">
-                    <p class="handwriting text-2xl text-red-700 font-bold mb-2 text-center">Gửi Em,</p>
-                    <p class="handwriting text-lg text-red-900 leading-relaxed text-justify flex-grow">
+                    <p class="handwriting text-xl text-red-700 font-bold mb-2 text-center">Gửi Em,</p>
+                    <p class="handwriting text-base text-red-900 leading-relaxed text-justify">
                         "Năm 2026 này, anh không chúc em giàu sang phú quý, chỉ chúc em mỗi ngày mở mắt ra đều thấy vui vẻ, và mỗi tối đi ngủ đều thấy bình yên (vì có anh).<br><br>
-                        Anh đã chuẩn bị sẵn những điều tuyệt vời nhất dành cho chúng mình.<br>
-                        Yêu em nhiều lắm! ❤️"
+                        Anh đã chuẩn bị sẵn những điều tuyệt vời nhất dành cho chúng mình. Cảm ơn em đã luôn ở bên anh.<br><br>
+                        Yêu em nhiều lắm! ❤️<br>
+                        <span class="text-xs block text-center text-gray-500 italic mt-2">(Bấm vào lá thư để đóng lại)</span>"
                     </p>
-                    <div class="mt-2 text-right font-serif text-red-800 font-bold text-sm">Ký tên: Chồng của em</div>
-                    <span class="text-xs block text-center text-gray-400 italic mt-2">(Bấm để đóng lại)</span>
+                    <div class="mt-4 text-right font-serif text-red-800 font-bold text-sm">Ký tên: Chồng của em</div>
                 </div>
                 <div class="envelope-flap flap-left"></div> <div class="envelope-flap flap-right"></div>
                 <div class="envelope-flap flap-bottom"></div> <div class="envelope-flap flap-top"></div>
             </div>
         </div>
-        <button class="btn-premium" onclick="nextPage(3)">TIẾP TỤC</button>
+        <button class="btn-premium" style="margin-top: 50px;" onclick="nextPage(3)">TIẾP TỤC</button>
     </section>
 
     <section id="screen3" class="screen">
@@ -354,21 +347,40 @@
             <div class="gift-lid"><div class="ribbon-lid"></div></div>
             <div class="gift-box"><div class="ribbon-body"></div></div>
         </div>
-        <h2 id="giftText" class="text-2xl handwriting font-bold text-red-800 mt-5 px-4">Chạm vào hộp quà để mở</h2>
-        <div class="w-full max-w-[800px] flex justify-center">
-            <canvas id="heartCanvas" width="800" height="400" class="hidden w-full h-auto"></canvas>
-        </div>
+        <h2 id="giftText" class="text-xl handwriting font-bold text-red-800 mt-5 px-4">Chạm vào hộp quà để mở</h2>
+        <canvas id="heartCanvas" width="800" height="600" class="hidden" style="max-width: 100vw; max-height: 50vh; width: auto; height: auto;"></canvas>
         <button id="btnGoLixi" class="btn-premium hidden" onclick="nextPage(4)">RÚT LÌ XÌ</button>
     </section>
 
-    <section id="screen4" class="screen">
-        <h2 class="text-3xl mb-6 handwriting text-red-900 font-bold px-4">Chọn 1 bao lì xì may mắn! 🧧</h2>
-        <div class="lixi-grid">
-            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
-            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
-            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
-            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
-            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
+   <section id="screen4" class="screen">
+        <h2 class="text-2xl mb-4 handwriting text-red-900 font-bold px-4">Chọn 1 bao lì xì may mắn nhé! 🧧</h2>
+        <div class="flex flex-wrap justify-center max-w-sm gap-2">
+            
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
+            <div class="lixi-card" onclick="flipLixi(this)">
+                🧧
+                <div class="lixi-back">...</div>
+            </div>
+
         </div>
         <button class="btn-premium mt-8" onclick="nextPage(5)">ĐÓN GIAO THỪA</button>
     </section>
@@ -383,11 +395,11 @@
 
     <script>
         // ===========================================
-        // 1. NHẠC & CONFIG
+        // 1. QUẢN LÝ NHẠC
         // ===========================================
         const playlist = [
             { title: "Next door", src: "next_door.mp3" },
-            { title: "Love Me", src: "Can_You_Love_Me_Tonight.mp3" },
+            { title: "Can You Love Me Tonight", src: "Can_You_Love_Me_Tonight.mp3" },
             { title: "Say Yes", src: "Say_Yes.mp3" }
         ];
 
@@ -396,6 +408,7 @@
         const playIcon = document.getElementById('playIcon');
         const pauseIcon = document.getElementById('pauseIcon');
         const musicTitle = document.getElementById('musicTitle');
+        const musicPlayer = document.getElementById('musicPlayer');
         let isPlaying = false;
 
         audio.src = playlist[currentSongIndex].src;
@@ -406,10 +419,12 @@
                 audio.pause();
                 playIcon.style.display = 'block';
                 pauseIcon.style.display = 'none';
+                musicPlayer.classList.remove('playing');
             } else {
-                audio.play().catch(e => console.log("Cần tương tác người dùng để phát nhạc"));
+                audio.play();
                 playIcon.style.display = 'none';
                 pauseIcon.style.display = 'block';
+                musicPlayer.classList.add('playing');
             }
             isPlaying = !isPlaying;
         }
@@ -442,34 +457,15 @@
             constructor(canvasId, options = {}) {
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
-                // Tăng độ phân giải cho canvas
-                this.dpr = window.devicePixelRatio || 1;
-                this.updateDimensions();
-                
-                this.startLength = options.length || 140;
-                this.branchWidth = options.width || 12;
+                // Tăng độ phân giải canvas
+                this.width = this.canvas.width = this.canvas.offsetWidth * 2; 
+                this.height = this.canvas.height = this.canvas.offsetHeight * 2;
+                this.startLength = options.length || (this.height / 4); // Responsive chiều dài cành
+                this.branchWidth = options.width || (this.width / 40); // Responsive độ dày
                 this.flowerColors = ["#ffcdd2", "#f8bbd0", "#f48fb1", "#ff80ab", "#ffffff"];
-                
-                // Vẽ lại khi resize
-                window.addEventListener('resize', () => {
-                    this.updateDimensions();
-                    this.draw();
-                });
-                
                 this.init();
             }
-
-            updateDimensions() {
-                const rect = this.canvas.getBoundingClientRect();
-                this.canvas.width = rect.width * this.dpr;
-                this.canvas.height = rect.height * this.dpr;
-                this.ctx.scale(this.dpr, this.dpr);
-                this.width = rect.width;
-                this.height = rect.height;
-            }
-
             init() { this.draw(); }
-            
             drawBranch(x, y, len, angle, width) {
                 this.ctx.save(); this.ctx.translate(x, y); this.ctx.rotate(angle);
                 this.ctx.beginPath(); this.ctx.moveTo(0, 0); this.ctx.quadraticCurveTo(width, -len / 2, 0, -len);
@@ -477,39 +473,31 @@
                 let grad = this.ctx.createLinearGradient(0, 0, width, 0);
                 grad.addColorStop(0, "#3e2723"); grad.addColorStop(0.5, "#6d4c41"); grad.addColorStop(1, "#3e2723");
                 this.ctx.strokeStyle = grad; this.ctx.stroke();
-                
-                if (len < 12) { this.drawFlowers(); this.ctx.restore(); return; }
-                
+                if (len < 10) { this.drawFlowers(); this.ctx.restore(); return; } // Giảm len tối thiểu cho mobile
                 let subLen = len * 0.75; let subWidth = width * 0.7;
                 let angleLeft = -Math.PI / 4 + (Math.random() * 0.2); 
                 let angleRight = Math.PI / 4 - (Math.random() * 0.2);
-                
                 this.drawBranch(0, -len, subLen, angleLeft, subWidth);
                 this.drawBranch(0, -len, subLen, angleRight, subWidth);
                 if (len > 30 && Math.random() > 0.6) { this.drawBranch(0, -len * 0.8, subLen * 0.6, 0, subWidth); }
                 this.ctx.restore();
             }
-            
             drawFlowers() {
                 let count = 3 + Math.floor(Math.random() * 3);
                 for (let i = 0; i < count; i++) {
                     let color = this.flowerColors[Math.floor(Math.random() * this.flowerColors.length)];
-                    let size = 3 + Math.random() * 5;
-                    let fX = (Math.random() - 0.5) * 25; let fY = (Math.random() - 0.5) * 20;
+                    let size = 3 + Math.random() * 4; // Hoa nhỏ hơn chút
+                    let fX = (Math.random() - 0.5) * 20; let fY = (Math.random() - 0.5) * 15;
                     this.ctx.beginPath(); this.ctx.arc(fX, fY, size, 0, Math.PI * 2);
-                    this.ctx.fillStyle = color; 
-                    this.ctx.shadowBlur = 4; this.ctx.shadowColor = "rgba(255, 182, 193, 0.6)";
-                    this.ctx.fill();
+                    this.ctx.fillStyle = color; this.ctx.shadowBlur = 4;
+                    this.ctx.shadowColor = "rgba(255, 182, 193, 0.6)"; this.ctx.fill();
                     this.ctx.beginPath(); this.ctx.arc(fX, fY, size * 0.2, 0, Math.PI * 2);
                     this.ctx.fillStyle = "#ffeb3b"; this.ctx.fill();
                 }
             }
-            
             draw() {
                 this.ctx.clearRect(0, 0, this.width, this.height);
-                // Điều chỉnh độ dài cây dựa trên chiều cao canvas thực tế
-                let responsiveLen = Math.min(this.height * 0.35, this.startLength);
-                this.drawBranch(this.width / 2, this.height, responsiveLen, 0, this.branchWidth);
+                this.drawBranch(this.width / 2, this.height, this.startLength, 0, this.branchWidth);
             }
         }
 
@@ -531,20 +519,19 @@
         function createFlower() {
             if(document.body.classList.contains('night-mode')) return; 
             const flower = document.createElement('div'); flower.className = 'falling-flower';
-            const isSakura = Math.random() > 0.4; const size = Math.random() * 12 + 10;
+            const isSakura = Math.random() > 0.4; const size = Math.random() * 10 + 10; // Giảm size hoa
             flower.style.width = `${size}px`; flower.style.height = `${size}px`;
             const startX = Math.random() * window.innerWidth; flower.style.left = `${startX}px`;
             let svgContent = isSakura 
-                ? `<svg viewBox="0 0 30 30" fill="${["#ffb7b2", "#ffdac1", "#ff9aa2"][Math.floor(Math.random()*3)]}" style="width:100%;height:100%;"><path d="M15,30 C5,20 0,10 5,5 C8,2 12,5 15,10 C18,5 22,2 25,5 C30,10 25,20 15,30 Z" /></svg>`
-                : `<svg viewBox="0 0 30 30" fill="${["#c0392b", "#e74c3c", "#922b21"][Math.floor(Math.random()*3)]}" style="width:100%;height:100%;"><path d="M15,0 C25,5 30,15 20,25 C10,30 0,20 5,10 C8,5 12,2 15,0 Z" /></svg>`;
+                ? `<svg viewBox="0 0 30 30" fill="${["#ffb7b2", "#ffdac1", "#ff9aa2"][Math.floor(Math.random()*3)]}" style="width:100%;height:100%;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.1));"><path d="M15,30 C5,20 0,10 5,5 C8,2 12,5 15,10 C18,5 22,2 25,5 C30,10 25,20 15,30 Z" /></svg>`
+                : `<svg viewBox="0 0 30 30" fill="${["#c0392b", "#e74c3c", "#922b21"][Math.floor(Math.random()*3)]}" style="width:100%;height:100%;filter:drop-shadow(0 2px 3px rgba(0,0,0,0.1));"><path d="M15,0 C25,5 30,15 20,25 C10,30 0,20 5,10 C8,5 12,2 15,0 Z" /></svg>`;
             flower.innerHTML = svgContent; document.body.appendChild(flower);
-            gsap.to(flower, { y: window.innerHeight + 50, x: startX + (Math.random() - 0.5) * 150, rotation: Math.random() * 360, duration: Math.random() * 5 + 4, ease: "none", onComplete: () => { flower.remove(); } });
+            gsap.to(flower, { y: window.innerHeight + 100, x: startX + (Math.random() - 0.5) * 200, rotation: Math.random() * 360, duration: Math.random() * 4 + 4, ease: "power1.out", onComplete: () => { flower.remove(); } });
         }
-        setInterval(createFlower, 500);
+        setInterval(createFlower, 600); // Giảm tần suất hoa rơi đỡ lag mobile
 
         function adjustColor(color, amount) { return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)); }
 
-        // --- HÀM VẼ SOCOLA & HOA (Dùng lại logic cũ, tinh chỉnh scale) ---
         function drawChocolatePiece(ctx, x, y, type) {
             ctx.save(); ctx.translate(x, y); ctx.fillStyle = "#fff5e6"; ctx.beginPath(); ctx.arc(0, 0, 11, 0, Math.PI*2); ctx.fill();
             ctx.strokeStyle = "#e6ccb3"; ctx.lineWidth = 1; ctx.setLineDash([2, 2]); ctx.stroke(); ctx.setLineDash([]);
@@ -583,29 +570,32 @@
             const baseFlowerColors = ["#ff0055", "#ff3377", "#e6004c", "#ff6699", "#ff1a66"]; for(let i=0; i<35; i++) { const baseColor = baseFlowerColors[Math.floor(Math.random() * baseFlowerColors.length)]; const angle = Math.random() * Math.PI * 2; const r = Math.sqrt(Math.random()) * 45; const fX = Math.cos(angle) * r; const fY = Math.sin(angle) * r * 0.8 - 45; const size = 7 + Math.random()*5; const grd = ctx.createRadialGradient(fX, fY, size*0.1, fX, fY, size); grd.addColorStop(0, adjustColor(baseColor, -60)); grd.addColorStop(0.7, baseColor); ctx.fillStyle = grd; ctx.beginPath(); ctx.arc(fX, fY, size, 0, Math.PI * 2); ctx.fill(); }
             ctx.restore();
         }
-
+        
         function initHeartAnimation() {
             const giftBox = document.getElementById('giftBox'); const heartCanvas = document.getElementById('heartCanvas'); const giftText = document.getElementById('giftText'); const btnGoLixi = document.getElementById('btnGoLixi');
             
-            // Tự động scale canvas theo màn hình
+            // Xử lý responsive cho Canvas trái tim
             const isMobile = window.innerWidth < 768;
-            const scaleFactor = isMobile ? 0.6 : 1; 
+            const canvasWidth = isMobile ? window.innerWidth : 800;
+            const canvasHeight = isMobile ? window.innerHeight * 0.5 : 600;
+            heartCanvas.width = canvasWidth;
+            heartCanvas.height = canvasHeight;
 
             giftBox.onclick = () => {
                 giftBox.classList.add('opening'); giftText.innerText = "Đang mở món quà...";
                 setTimeout(() => {
                     giftBox.classList.add('hidden'); giftText.innerText = "Trái tim này là của anh dành cho em ❤️"; heartCanvas.classList.remove('hidden');
                     const ctx = heartCanvas.getContext('2d');
-                    // Xóa canvas trước khi vẽ
-                    ctx.clearRect(0,0, heartCanvas.width, heartCanvas.height);
+                    const cx = canvasWidth / 2;
+                    const cy = canvasHeight / 2;
+                    const scaleFactor = isMobile ? 0.6 : 1; // Thu nhỏ trên mobile
+
+                    // Vẽ 2 bó hoa và hộp chocolate dựa trên tâm màn hình
+                    drawRealisticBouquet(ctx, cx - (250*scaleFactor), cy + 50, 1.2 * scaleFactor, -25); 
+                    drawRealisticBouquet(ctx, cx + (250*scaleFactor), cy + 50, 1.2 * scaleFactor, 25);
+                    drawChocolateBox(ctx, cx - (250*scaleFactor), cy - (100*scaleFactor), 1.4 * scaleFactor, -15); 
+                    drawChocolateBox(ctx, cx + (250*scaleFactor), cy - (100*scaleFactor), 1.4 * scaleFactor, 15);
                     
-                    // Vẽ tĩnh (Hoa & Socola) - chỉnh tọa độ cho responsive
-                    drawRealisticBouquet(ctx, 150, 250, 1.2 * scaleFactor, -25); 
-                    drawRealisticBouquet(ctx, 650, 250, 1.2 * scaleFactor, 25);
-                    drawChocolateBox(ctx, 150, 120, 1.4 * scaleFactor, -15); 
-                    drawChocolateBox(ctx, 650, 120, 1.4 * scaleFactor, 15);
-                    
-                    // Vẽ tim
                     let t = 0; 
                     function draw() { 
                         if (t > 2 * Math.PI) { btnGoLixi.classList.remove('hidden'); return; } 
@@ -613,21 +603,17 @@
                         const x = 16 * Math.pow(Math.sin(t), 3); 
                         const y = -(13 * Math.cos(t) - 5 * Math.cos(2*t) - 2 * Math.cos(3*t) - Math.cos(4*t)); 
                         ctx.fillStyle = "#c0392b"; ctx.beginPath(); 
-                        ctx.arc(x * scale + 400, y * scale + 180, 4 * scaleFactor, 0, Math.PI * 2); 
-                        ctx.fill(); t += 0.05; requestAnimationFrame(draw); 
+                        ctx.arc(x * scale + cx, y * scale + cy, 4 * scaleFactor, 0, Math.PI * 2); ctx.fill(); 
+                        t += 0.05; requestAnimationFrame(draw); 
                     } 
                     draw();
                 }, 1200); 
             };
         }
-
         function flipLixi(el) { el.classList.add('flipped'); el.style.pointerEvents = 'none'; }
-        
         function triggerFireworksEnding() {
             const fCanvas = document.getElementById('fireworks-canvas'); const fctx = fCanvas.getContext('2d'); const nyText = document.getElementById('happy-new-year-text'); const restartBtn = document.getElementById('restart-btn-container');
-            fCanvas.style.display = "block"; nyText.style.display = "block"; 
-            setTimeout(() => { nyText.classList.add('show'); restartBtn.style.display = "block"; setTimeout(() => { restartBtn.style.opacity = 1; }, 3000); }, 500);
-            
+            fCanvas.style.display = "block"; nyText.style.display = "block"; setTimeout(() => { nyText.classList.add('show'); restartBtn.style.display = "block"; setTimeout(() => { restartBtn.style.opacity = 1; }, 3000); }, 500);
             fCanvas.width = window.innerWidth; fCanvas.height = window.innerHeight;
             let fwParticles = [];
             function animateFW() {
@@ -638,30 +624,47 @@
             }
             animateFW();
         }
-        
         window.addEventListener('resize', () => { 
             const fCanvas = document.getElementById('fireworks-canvas'); 
             if(fCanvas.style.display === 'block') { fCanvas.width = window.innerWidth; fCanvas.height = window.innerHeight; } 
+            
+            // Vẽ lại cây khi xoay màn hình
+            new CherryBlossomTree('tree-canvas-left', { length: window.innerHeight/5 });
+            new CherryBlossomTree('tree-canvas-right', { length: window.innerHeight/5 });
         });
 
         // ===========================================
-        // 3. RANDOM LÌ XÌ & INIT
+        // 3. RANDOM LÌ XÌ (LOGIC MỚI)
         // ===========================================
-        const giftList = ["10k<br>", "20k<br>", "50k<br>", "100k<br>", "200k<br>"];
+        const giftList = [
+            "10k<br>",
+            "20k<br>",
+            "50k<br>",
+            "100k<br>",
+            "200k<br>"
+        ];
 
         window.addEventListener('load', () => {
-            // Khởi tạo cây với kích thước dynamic
-            new CherryBlossomTree('tree-canvas-left', { length: 140, width: 14 });
-            new CherryBlossomTree('tree-canvas-right', { length: 150, width: 15 });
-            
-            // Xáo trộn lì xì
+            // 1. Tạo cây (Responsive theo màn hình)
+            new CherryBlossomTree('tree-canvas-left', { length: window.innerHeight/5 });
+            new CherryBlossomTree('tree-canvas-right', { length: window.innerHeight/5 });
+
+            // 2. Random quà
+            randomizeLixi();
+        });
+
+        function randomizeLixi() {
             for (let i = giftList.length - 1; i > 0; i--) {
                 const j = Math.floor(Math.random() * (i + 1));
                 [giftList[i], giftList[j]] = [giftList[j], giftList[i]];
             }
             const lixiElements = document.querySelectorAll('.lixi-back');
-            lixiElements.forEach((el, index) => { if (giftList[index]) el.innerHTML = giftList[index]; });
-        });
+            lixiElements.forEach((el, index) => {
+                if (giftList[index]) {
+                    el.innerHTML = giftList[index];
+                }
+            });
+        }
     </script>
 </body>
 </html>
