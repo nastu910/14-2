@@ -67,44 +67,25 @@
         body.night-mode .music-btn { color: #f1c40f; }
         body.night-mode .music-info { color: #fff; }
 
-        /* --- DECOR TẾT (ĐÃ SỬA: ĐỨNG YÊN) --- */
+        /* --- DECOR TẾT (ĐÃ FIX: ĐỨNG YÊN) --- */
         .tet-decor-container {
-            position: fixed; 
-            top: -10px; 
-            z-index: 60; 
-            display: flex; 
-            flex-direction: column;
-            align-items: center; 
-            pointer-events: none;
-            
-            /* Đã xóa dòng animation: sway... để nó không đung đưa/di chuyển nữa */
+            position: fixed; top: -10px; z-index: 60; display: flex; flex-direction: column;
+            align-items: center; pointer-events: none;
             transform-origin: top center;
-        }
-
-        /* Giữ chặt vị trí bên trái */
-        .left-decor { 
-            left: 10px; 
-            right: auto; /* Đảm bảo không bị kéo sang phải */
-        } 
-        
-        /* Giữ chặt vị trí bên phải */
-        .right-decor { 
-            right: 10px; 
-            left: auto; /* Đảm bảo không bị kéo sang trái */
+            /* Đã tắt animation để không lắc lư/di chuyển */
+            animation: none; 
         }
         
-        /* Mobile Scaling: Chỉ thu nhỏ kích thước, không thay đổi vị trí */
+        .left-decor { left: 10px; right: auto; } 
+        .right-decor { right: 10px; left: auto; }
+        
+        /* Mobile Scaling */
         @media (max-width: 768px) {
-            .tet-decor-container { 
-                transform: scale(0.6); 
-                top: -20px; 
-            }
-            /* Trên mobile ép sát lề hơn một chút nếu cần */
+            .tet-decor-container { transform: scale(0.6); top: -20px; }
             .left-decor { left: -5px; } 
             .right-decor { right: -5px; }
         }
 
-        /* Các phần trang trí con (giữ nguyên) */
         .decor-string { width: 2px; height: 40px; background: #b01c20; }
         .decor-coin {
             width: 40px; height: 40px; background: #d00000; border: 2px solid #f1c40f;
@@ -123,35 +104,6 @@
             width: 16px; height: 50px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px);
             border-radius: 0 0 10px 10px;
         }
-        
-        /* Xóa luôn @keyframes sway nếu không dùng nữa để code gọn */
-        
-        /* Mobile Scaling cho Decor */
-        @media (max-width: 768px) {
-            .tet-decor-container { transform: scale(0.6); top: -20px; }
-            .left-decor { left: -10px; } /* Đẩy sát lề hơn */
-            .right-decor { right: -10px; }
-        }
-
-        .decor-string { width: 2px; height: 40px; background: #b01c20; } /* Dây ngắn lại xíu */
-        .decor-coin {
-            width: 40px; height: 40px; background: #d00000; border: 2px solid #f1c40f;
-            border-radius: 50%; display: flex; align-items: center; justify-content: center;
-            color: #f1c40f; font-family: 'Pangolin', cursive; font-size: 1rem; font-weight: bold;
-            box-shadow: 0 4px 10px rgba(0,0,0,0.3); position: relative; margin-bottom: 4px; z-index: 2;
-        }
-        .decor-coin::before {
-            content: ''; position: absolute; top: 2px; left: 2px; right: 2px; bottom: 2px;
-            border: 1px dashed rgba(241, 196, 15, 0.5); border-radius: 50%;
-        }
-        .coin-connector { width: 3px; height: 8px; background: #f1c40f; margin: -2px 0; z-index: 1; }
-        .decor-tassel { display: flex; flex-direction: column; align-items: center; margin-top: -4px; }
-        .tassel-head { width: 12px; height: 10px; background: #f1c40f; border-radius: 4px 4px 0 0; }
-        .tassel-body {
-            width: 16px; height: 50px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px);
-            border-radius: 0 0 10px 10px;
-        }
-        @keyframes sway { 0% { transform: rotate(2deg) scale(var(--s, 1)); } 100% { transform: rotate(-2deg) scale(var(--s, 1)); } }
 
         /* --- CÂY ANH ĐÀO (Responsive) --- */
         .cherry-tree-container {
@@ -163,11 +115,9 @@
         canvas.tree-canvas { width: 100%; height: 100%; }
 
         @media (max-width: 768px) {
-            .cherry-tree-container { width: 220px; height: 320px; } /* Nhỏ hơn nữa trên mobile */
+            .cherry-tree-container { width: 220px; height: 320px; }
             .tree-left { left: -50px; bottom: -20px; } 
             .tree-right { right: -50px; bottom: -20px; }
-            /* Thêm css variable để giữ scale cho animation decor */
-            .tet-decor-container { --s: 0.6; } 
         }
 
         /* --- PHONG BÌ (Responsive) --- */
@@ -210,20 +160,18 @@
             transform: rotateX(180deg); z-index: 1; transition: transform 0.6s ease-in-out 0s, z-index 0.2s linear 0.2s;
         }
         .envelope-container.open .letter-content {
-            /* Fix: Giảm độ bay lên để không bị cắt trên mobile */
             transform: translate(-50%, -80px) scale(1); opacity: 1; z-index: 50;
             box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 0.4s ease-in 0.5s;
         }
         @media (max-width: 768px) {
-            /* Tùy chỉnh riêng cho mobile để bao thư vừa vặn */
             .envelope-container { width: 280px; height: 180px; margin-top: 80px; }
             .flap-left { border-left-width: 140px; border-top-width: 90px; border-bottom-width: 90px; }
             .flap-right { border-right-width: 140px; border-top-width: 90px; border-bottom-width: 90px; }
             .flap-bottom { border-bottom-width: 110px; border-left-width: 140px; border-right-width: 140px; }
             .flap-top { border-top-width: 100px; border-left-width: 140px; border-right-width: 140px; }
             .letter-content { width: 260px; height: 300px; padding: 15px; }
-            .envelope-container.open .letter-content { transform: translate(-50%, -60px) scale(1); } /* Bay thấp hơn */
+            .envelope-container.open .letter-content { transform: translate(-50%, -60px) scale(1); }
         }
 
         /* --- HỘP QUÀ --- */
@@ -344,7 +292,7 @@
         <div class="decor-tassel"><div class="tassel-head"></div><div class="tassel-body"></div></div>
     </div>
 
-    <div class="tet-decor-container right-decor" style="animation-delay: 1s;">
+    <div class="tet-decor-container right-decor">
         <div class="decor-string"></div>
         <div class="decor-coin">Chúc</div> <div class="coin-connector"></div>
         <div class="decor-coin">Mừng</div> <div class="coin-connector"></div>
@@ -576,7 +524,7 @@
             flower.innerHTML = svgContent; document.body.appendChild(flower);
             gsap.to(flower, { y: window.innerHeight + 100, x: startX + (Math.random() - 0.5) * 200, rotation: Math.random() * 360, duration: Math.random() * 4 + 4, ease: "power1.out", onComplete: () => { flower.remove(); } });
         }
-        setInterval(createFlower, 600); // Giảm tần suất hoa rơi đỡ lag mobile
+        setInterval(createFlower, 600); 
 
         function adjustColor(color, amount) { return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2)); }
 
@@ -636,9 +584,8 @@
                     const ctx = heartCanvas.getContext('2d');
                     const cx = canvasWidth / 2;
                     const cy = canvasHeight / 2;
-                    const scaleFactor = isMobile ? 0.6 : 1; // Thu nhỏ trên mobile
+                    const scaleFactor = isMobile ? 0.6 : 1; 
 
-                    // Vẽ 2 bó hoa và hộp chocolate dựa trên tâm màn hình
                     drawRealisticBouquet(ctx, cx - (250*scaleFactor), cy + 50, 1.2 * scaleFactor, -25); 
                     drawRealisticBouquet(ctx, cx + (250*scaleFactor), cy + 50, 1.2 * scaleFactor, 25);
                     drawChocolateBox(ctx, cx - (250*scaleFactor), cy - (100*scaleFactor), 1.4 * scaleFactor, -15); 
@@ -676,7 +623,6 @@
             const fCanvas = document.getElementById('fireworks-canvas'); 
             if(fCanvas.style.display === 'block') { fCanvas.width = window.innerWidth; fCanvas.height = window.innerHeight; } 
             
-            // Vẽ lại cây khi xoay màn hình
             new CherryBlossomTree('tree-canvas-left', { length: window.innerHeight/5 });
             new CherryBlossomTree('tree-canvas-right', { length: window.innerHeight/5 });
         });
@@ -716,4 +662,3 @@
     </script>
 </body>
 </html>
-
