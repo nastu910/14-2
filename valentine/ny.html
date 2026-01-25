@@ -20,11 +20,7 @@
             margin: 0; padding: 0; overflow: hidden; font-family: 'Quicksand', sans-serif;
             background: radial-gradient(circle at center, #fff0f0 0%, #ffdde1 40%, #ee9ca7 100%);
             color: var(--dark-text); transition: background 2s ease;
-            /* Fix lỗi chiều cao trên mobile */
-            height: 100vh; /* Fallback */
-            height: 100dvh; 
-            width: 100vw;
-            position: relative;
+            height: 100vh; height: 100dvh; width: 100vw; position: relative;
         }
         body.night-mode { background: linear-gradient(to bottom, #240b36, #c31432); color: white; }
 
@@ -32,12 +28,11 @@
             position: absolute; top: 0; left: 0; width: 100%; height: 100%;
             display: flex; flex-direction: column; align-items: center; justify-content: center;
             visibility: hidden; opacity: 0; text-align: center; padding: 15px; z-index: 20;
-            box-sizing: border-box; /* Đảm bảo padding không làm vỡ khung */
+            box-sizing: border-box;
         }
         .active { visibility: visible; opacity: 1; }
         .handwriting { font-family: 'Dancing Script', cursive; }
         
-        /* Button Style */
         .btn-premium {
             background: linear-gradient(135deg, #c0392b, #8e44ad);
             padding: 12px 30px; border-radius: 50px; color: white; font-weight: bold; font-size: 1rem;
@@ -53,37 +48,52 @@
             background: rgba(255, 255, 255, 0.2); backdrop-filter: blur(10px);
             padding: 8px 12px; border-radius: 30px; border: 1px solid rgba(255, 255, 255, 0.3);
             display: flex; align-items: center; gap: 10px;
-            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
-            transition: all 0.3s ease;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1); transition: all 0.3s ease;
         }
         .music-btn {
             background: none; border: none; cursor: pointer; color: #c0392b;
-            font-size: 1.2rem; display: flex; align-items: center; justify-content: center;
-            width: 28px; height: 28px;
+            font-size: 1.2rem; display: flex; align-items: center; justify-content: center; width: 28px; height: 28px;
         }
         .music-btn svg { width: 20px; height: 20px; fill: currentColor; }
         .music-info { font-size: 0.75rem; font-weight: bold; color: #922b21; max-width: 0; overflow: hidden; white-space: nowrap; transition: max-width 0.5s; opacity: 0; }
         .music-player.playing .music-info, .music-player:hover .music-info { max-width: 120px; opacity: 1; margin-right: 5px; }
-        body.night-mode .music-btn { color: #f1c40f; }
-        body.night-mode .music-info { color: #fff; }
+        body.night-mode .music-btn { color: #f1c40f; } body.night-mode .music-info { color: #fff; }
 
-        /* --- DECOR TẾT (ĐÃ FIX: ĐỨNG YÊN) --- */
+        /* --- DECOR TẾT (LOGIC MỚI: NEO GÓC) --- */
         .tet-decor-container {
-            position: fixed; top: -10px; z-index: 60; display: flex; flex-direction: column;
-            align-items: center; pointer-events: none;
-            transform-origin: top center;
-            /* Đã tắt animation để không lắc lư/di chuyển */
-            animation: none; 
+            position: fixed; 
+            top: 0; 
+            z-index: 60; 
+            display: flex; 
+            flex-direction: column;
+            align-items: center; 
+            pointer-events: none;
+            /* Tắt hoàn toàn animation */
+            animation: none !important;
+            transform: none !important;
         }
         
-        .left-decor { left: 10px; right: auto; } 
-        .right-decor { right: 10px; left: auto; }
+        /* Cấu hình Desktop */
+        .left-decor { left: 20px; right: auto; transform-origin: top left; }
+        .right-decor { right: 20px; left: auto; transform-origin: top right; }
         
-        /* Mobile Scaling */
+        /* Cấu hình Mobile: Thu nhỏ và Neo chặt vào góc */
         @media (max-width: 768px) {
-            .tet-decor-container { transform: scale(0.6); top: -20px; }
-            .left-decor { left: -5px; } 
-            .right-decor { right: -5px; }
+            .tet-decor-container { top: 0; }
+            
+            .left-decor { 
+                left: 5px; 
+                /* Scale từ góc trái trên đi xuống -> Đảm bảo dính sát góc */
+                transform-origin: top left; 
+                transform: scale(0.6) !important;
+            } 
+            
+            .right-decor { 
+                right: 5px; 
+                /* Scale từ góc phải trên đi xuống */
+                transform-origin: top right; 
+                transform: scale(0.6) !important;
+            }
         }
 
         .decor-string { width: 2px; height: 40px; background: #b01c20; }
@@ -100,12 +110,9 @@
         .coin-connector { width: 3px; height: 8px; background: #f1c40f; margin: -2px 0; z-index: 1; }
         .decor-tassel { display: flex; flex-direction: column; align-items: center; margin-top: -4px; }
         .tassel-head { width: 12px; height: 10px; background: #f1c40f; border-radius: 4px 4px 0 0; }
-        .tassel-body {
-            width: 16px; height: 50px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px);
-            border-radius: 0 0 10px 10px;
-        }
+        .tassel-body { width: 16px; height: 50px; background: repeating-linear-gradient(90deg, #d00000, #d00000 2px, #b01c20 3px); border-radius: 0 0 10px 10px; }
 
-        /* --- CÂY ANH ĐÀO (Responsive) --- */
+        /* --- CÂY ANH ĐÀO (Đã chỉnh để không che chữ) --- */
         .cherry-tree-container {
             position: absolute; bottom: 0; z-index: 10; pointer-events: none;
             width: 400px; height: 500px;
@@ -115,34 +122,25 @@
         canvas.tree-canvas { width: 100%; height: 100%; }
 
         @media (max-width: 768px) {
-            .cherry-tree-container { width: 220px; height: 320px; }
-            .tree-left { left: -50px; bottom: -20px; } 
-            .tree-right { right: -50px; bottom: -20px; }
+            /* Giảm kích thước cây trên mobile để thoáng màn hình */
+            .cherry-tree-container { width: 180px; height: 250px; }
+            .tree-left { left: -40px; bottom: -10px; } 
+            .tree-right { right: -40px; bottom: -10px; }
         }
 
-        /* --- PHONG BÌ (Responsive) --- */
+        /* --- PHONG BÌ --- */
         .envelope-container {
             position: relative; width: 300px; height: 200px; perspective: 1000px;
-            cursor: pointer; margin-top: 100px; /* Giảm margin top */
-            max-width: 90vw; /* Không bao giờ vượt quá chiều ngang màn hình */
+            cursor: pointer; margin-top: 80px; max-width: 90vw;
         }
         .envelope-wrapper {
             position: relative; width: 100%; height: 100%; background: var(--envelope-bg);
             box-shadow: 0 20px 45px rgba(0,0,0,0.3); border-radius: 5px;
         }
         .envelope-flap { position: absolute; width: 0; height: 0; z-index: 5; }
-        .flap-left {
-            top: 0; left: 0; border-top: 100px solid transparent; border-bottom: 100px solid transparent;
-            border-left: 150px solid var(--envelope-flap); filter: brightness(0.9);
-        }
-        .flap-right {
-            top: 0; right: 0; border-top: 100px solid transparent; border-bottom: 100px solid transparent;
-            border-right: 150px solid var(--envelope-flap); filter: brightness(0.9);
-        }
-        .flap-bottom {
-            bottom: 0; left: 0; border-left: 150px solid transparent; border-right: 150px solid transparent;
-            border-bottom: 130px solid var(--envelope-flap); z-index: 6; filter: brightness(1.1);
-        }
+        .flap-left { top: 0; left: 0; border-top: 100px solid transparent; border-bottom: 100px solid transparent; border-left: 150px solid var(--envelope-flap); filter: brightness(0.9); }
+        .flap-right { top: 0; right: 0; border-top: 100px solid transparent; border-bottom: 100px solid transparent; border-right: 150px solid var(--envelope-flap); filter: brightness(0.9); }
+        .flap-bottom { bottom: 0; left: 0; border-left: 150px solid transparent; border-right: 150px solid transparent; border-bottom: 130px solid var(--envelope-flap); z-index: 6; filter: brightness(1.1); }
         .flap-top {
             top: 0; left: 0; border-left: 150px solid transparent; border-right: 150px solid transparent;
             border-top: 120px solid var(--envelope-top); z-index: 20; transform-origin: top;
@@ -156,16 +154,13 @@
         }
         .letter-content::-webkit-scrollbar { width: 2px; }
         
-        .envelope-container.open .flap-top {
-            transform: rotateX(180deg); z-index: 1; transition: transform 0.6s ease-in-out 0s, z-index 0.2s linear 0.2s;
-        }
+        .envelope-container.open .flap-top { transform: rotateX(180deg); z-index: 1; transition: transform 0.6s ease-in-out 0s, z-index 0.2s linear 0.2s; }
         .envelope-container.open .letter-content {
-            transform: translate(-50%, -80px) scale(1); opacity: 1; z-index: 50;
-            box-shadow: 0 15px 40px rgba(0,0,0,0.3);
+            transform: translate(-50%, -80px) scale(1); opacity: 1; z-index: 50; box-shadow: 0 15px 40px rgba(0,0,0,0.3);
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 0.4s ease-in 0.5s;
         }
         @media (max-width: 768px) {
-            .envelope-container { width: 280px; height: 180px; margin-top: 80px; }
+            .envelope-container { width: 280px; height: 180px; margin-top: 60px; }
             .flap-left { border-left-width: 140px; border-top-width: 90px; border-bottom-width: 90px; }
             .flap-right { border-right-width: 140px; border-top-width: 90px; border-bottom-width: 90px; }
             .flap-bottom { border-bottom-width: 110px; border-left-width: 140px; border-right-width: 140px; }
@@ -204,25 +199,16 @@
         }
         .gift-bow::before { left: -12px; transform: rotate(10deg); }
         .gift-bow::after { right: -12px; transform: rotate(-10deg) scaleX(-1); }
-        @keyframes shakeBox {
-            0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); }
-        }
+        @keyframes shakeBox { 0%, 100% { transform: rotate(0deg); } 25% { transform: rotate(3deg); } 75% { transform: rotate(-3deg); } }
         .animate-shake { animation: shakeBox 2s infinite ease-in-out; }
         .gift-container:hover { transform: scale(1.05); }
         .gift-container.opening { animation: none; pointer-events: none; }
-        .gift-container.opening .gift-lid, .gift-container.opening .gift-bow {
-            transform: translateY(-120px) rotate(-15deg); opacity: 0;
-        }
+        .gift-container.opening .gift-lid, .gift-container.opening .gift-bow { transform: translateY(-120px) rotate(-15deg); opacity: 0; }
         .gift-container.opening .gift-box { opacity: 0; }
 
-        /* --- HOA RƠI --- */
         .falling-flower { position: absolute; pointer-events: none; z-index: 5; opacity: 0.9; top: -50px; }
 
-        /* --- CÁC PHẦN KHÁC --- */
-        #fireworks-canvas {
-            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
-            pointer-events: none; z-index: 100; display: none;
-        }
+        #fireworks-canvas { position: fixed; top: 0; left: 0; width: 100%; height: 100%; pointer-events: none; z-index: 100; display: none; }
         #happy-new-year-text {
             position: fixed; top: 40%; left: 50%; transform: translate(-50%, -50%);
             z-index: 150; text-align: center; display: none; pointer-events: none; width: 90%;
@@ -230,8 +216,7 @@
         #happy-new-year-text h1 {
             font-family: 'Dancing Script', cursive; font-size: 3rem; color: var(--gold);
             text-shadow: 0 0 10px rgba(241, 196, 15, 0.8), 2px 2px 0px #c0392b;
-            opacity: 0; transform: scale(0.5); transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-            line-height: 1.2;
+            opacity: 0; transform: scale(0.5); transition: all 2s cubic-bezier(0.175, 0.885, 0.32, 1.275); line-height: 1.2;
         }
         @media (min-width: 768px) { #happy-new-year-text h1 { font-size: 6rem; } }
         #happy-new-year-text.show h1 { opacity: 1; transform: scale(1); }
@@ -245,8 +230,7 @@
             width: 80px; height: 120px; background: #b01c20; border: 2px solid #f1c40f;
             border-radius: 8px; margin: 5px; display: flex; align-items: center; justify-content: center;
             cursor: pointer; font-size: 2rem; color: #f1c40f; position: relative;
-            transform-style: preserve-3d; transition: transform 0.6s; box-shadow: 0 5px 15px rgba(100, 30, 22, 0.4);
-            z-index: 40;
+            transform-style: preserve-3d; transition: transform 0.6s; box-shadow: 0 5px 15px rgba(100, 30, 22, 0.4); z-index: 40;
         }
         .lixi-card.flipped { transform: rotateY(180deg); }
         .lixi-back {
@@ -309,9 +293,9 @@
     </div>
 
     <section id="screen1" class="screen active">
-        <div class="relative z-50 px-8">
-            <h2 class="text-4xl md:text-6xl mb-4 handwriting" style="color: #922b21; text-shadow: 2px 2px 4px rgba(255,255,255,0.4);">Chào em yêu,</h2>
-            <p class="text-lg md:text-2xl mb-6 font-medium" style="color: #7b241c;">Nắng xuân đã về, Valentine cũng tới ❤️<br>Anh có món quà nhỏ tặng em.</p>
+        <div class="relative z-50 px-4 w-full flex flex-col items-center">
+            <h2 class="text-4xl md:text-6xl mb-4 handwriting w-full" style="color: #922b21; text-shadow: 2px 2px 4px rgba(255,255,255,0.4);">Chào em yêu,</h2>
+            <p class="text-lg md:text-2xl mb-6 font-medium w-full" style="color: #7b241c;">Nắng xuân đã về, Valentine cũng tới ❤️<br>Anh có món quà nhỏ tặng em.</p>
             <button class="btn-premium" onclick="startExperience()">MỞ QUÀ NGAY 🎁</button>
         </div>
     </section>
@@ -351,32 +335,11 @@
    <section id="screen4" class="screen">
         <h2 class="text-2xl mb-4 handwriting text-red-900 font-bold px-4">Chọn 1 bao lì xì may mắn nhé! 🧧</h2>
         <div class="flex flex-wrap justify-center max-w-sm gap-2">
-            
-            <div class="lixi-card" onclick="flipLixi(this)">
-                🧧
-                <div class="lixi-back">...</div>
-            </div>
-
-            <div class="lixi-card" onclick="flipLixi(this)">
-                🧧
-                <div class="lixi-back">...</div>
-            </div>
-
-            <div class="lixi-card" onclick="flipLixi(this)">
-                🧧
-                <div class="lixi-back">...</div>
-            </div>
-
-            <div class="lixi-card" onclick="flipLixi(this)">
-                🧧
-                <div class="lixi-back">...</div>
-            </div>
-
-            <div class="lixi-card" onclick="flipLixi(this)">
-                🧧
-                <div class="lixi-back">...</div>
-            </div>
-
+            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
+            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
+            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
+            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
+            <div class="lixi-card" onclick="flipLixi(this)">🧧<div class="lixi-back">...</div></div>
         </div>
         <button class="btn-premium mt-8" onclick="nextPage(5)">ĐÓN GIAO THỪA</button>
     </section>
@@ -453,11 +416,10 @@
             constructor(canvasId, options = {}) {
                 this.canvas = document.getElementById(canvasId);
                 this.ctx = this.canvas.getContext('2d');
-                // Tăng độ phân giải canvas
                 this.width = this.canvas.width = this.canvas.offsetWidth * 2; 
                 this.height = this.canvas.height = this.canvas.offsetHeight * 2;
-                this.startLength = options.length || (this.height / 4); // Responsive chiều dài cành
-                this.branchWidth = options.width || (this.width / 40); // Responsive độ dày
+                this.startLength = options.length || (this.height / 4); 
+                this.branchWidth = options.width || (this.width / 40);
                 this.flowerColors = ["#ffcdd2", "#f8bbd0", "#f48fb1", "#ff80ab", "#ffffff"];
                 this.init();
             }
@@ -469,7 +431,7 @@
                 let grad = this.ctx.createLinearGradient(0, 0, width, 0);
                 grad.addColorStop(0, "#3e2723"); grad.addColorStop(0.5, "#6d4c41"); grad.addColorStop(1, "#3e2723");
                 this.ctx.strokeStyle = grad; this.ctx.stroke();
-                if (len < 10) { this.drawFlowers(); this.ctx.restore(); return; } // Giảm len tối thiểu cho mobile
+                if (len < 10) { this.drawFlowers(); this.ctx.restore(); return; } 
                 let subLen = len * 0.75; let subWidth = width * 0.7;
                 let angleLeft = -Math.PI / 4 + (Math.random() * 0.2); 
                 let angleRight = Math.PI / 4 - (Math.random() * 0.2);
@@ -482,7 +444,7 @@
                 let count = 3 + Math.floor(Math.random() * 3);
                 for (let i = 0; i < count; i++) {
                     let color = this.flowerColors[Math.floor(Math.random() * this.flowerColors.length)];
-                    let size = 3 + Math.random() * 4; // Hoa nhỏ hơn chút
+                    let size = 3 + Math.random() * 4; 
                     let fX = (Math.random() - 0.5) * 20; let fY = (Math.random() - 0.5) * 15;
                     this.ctx.beginPath(); this.ctx.arc(fX, fY, size, 0, Math.PI * 2);
                     this.ctx.fillStyle = color; this.ctx.shadowBlur = 4;
@@ -515,7 +477,7 @@
         function createFlower() {
             if(document.body.classList.contains('night-mode')) return; 
             const flower = document.createElement('div'); flower.className = 'falling-flower';
-            const isSakura = Math.random() > 0.4; const size = Math.random() * 10 + 10; // Giảm size hoa
+            const isSakura = Math.random() > 0.4; const size = Math.random() * 10 + 10; 
             flower.style.width = `${size}px`; flower.style.height = `${size}px`;
             const startX = Math.random() * window.innerWidth; flower.style.left = `${startX}px`;
             let svgContent = isSakura 
@@ -570,7 +532,6 @@
         function initHeartAnimation() {
             const giftBox = document.getElementById('giftBox'); const heartCanvas = document.getElementById('heartCanvas'); const giftText = document.getElementById('giftText'); const btnGoLixi = document.getElementById('btnGoLixi');
             
-            // Xử lý responsive cho Canvas trái tim
             const isMobile = window.innerWidth < 768;
             const canvasWidth = isMobile ? window.innerWidth : 800;
             const canvasHeight = isMobile ? window.innerHeight * 0.5 : 600;
