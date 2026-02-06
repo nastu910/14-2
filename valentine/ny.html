@@ -32,7 +32,6 @@
             min-height: 100vh;
             position: relative;
             overflow-x: hidden;
-            /* Cho phép cuộn dọc toàn trang nếu nội dung quá dài khi zoom */
             overflow-y: auto;
         }
 
@@ -56,7 +55,6 @@
             text-align: center;
             padding: 20px;
             z-index: 20;
-            /* Đảm bảo nội dung không bị cắt khi màn hình nhỏ */
             overflow-y: visible;
         }
 
@@ -279,14 +277,14 @@
             height: 100%;
         }
 
-        /* --- PHONG BÌ & LÁ THƯ (Đã tối ưu Mobile) --- */
+        /* --- PHONG BÌ & LÁ THƯ --- */
         .envelope-container {
             position: relative;
             width: 320px;
             height: 220px;
             perspective: 1000px;
             cursor: pointer;
-            margin-top: 100px; /* Giảm margin mặc định */
+            margin-top: 100px;
             transform-origin: center top;
             transition: transform 0.5s ease;
         }
@@ -346,13 +344,12 @@
             transition: transform 0.6s ease-in-out 0.6s, z-index 0.2s linear 0.6s;
         }
 
-        /* Nội dung thư */
         .letter-content {
             position: absolute;
             bottom: 0;
             left: 50%;
             width: 300px;
-            height: 380px; /* Chiều cao gốc */
+            height: 380px;
             background: #fffdf5;
             padding: 30px 25px;
             border-radius: 8px;
@@ -360,7 +357,7 @@
             transform: translate(-50%, 0) scale(0.9);
             opacity: 0;
             z-index: 4;
-            overflow-y: auto; /* Cho phép cuộn nội dung bên trong lá thư */
+            overflow-y: auto;
             transition: transform 0.6s ease-in-out 0s, opacity 0.4s ease-in 0.5s;
         }
 
@@ -387,7 +384,7 @@
             transition: transform 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) 0.5s, opacity 0.4s ease-in 0.5s;
         }
 
-        /* --- RESPONSIVE MOBILE (PHẦN QUAN TRỌNG) --- */
+        /* --- RESPONSIVE MOBILE --- */
         @media (max-width: 768px) {
             .tet-decor-container {
                 transform: scale(0.7);
@@ -424,28 +421,19 @@
                 left: 15px;
             }
 
-            /* Tinh chỉnh phong bì trên mobile */
             .envelope-container {
                 margin-top: 100px;
-                /* Đẩy lên cao hơn chút để có chỗ cho thư bay ra */
                 transform: scale(0.85);
-                /* Thu nhỏ phong bì lại để vừa màn hình */
             }
 
-            /* Tinh chỉnh lá thư khi mở trên mobile */
             .envelope-container.open .letter-content {
-                /* Bay lên vừa phải (-50px) thay vì bay quá cao */
                 transform: translate(-50%, -50px) scale(1);
                 width: 95%;
-                /* Chiếm 95% chiều rộng phong bì */
                 max-width: 320px;
-                /* Không quá to */
                 height: auto;
                 max-height: 55vh;
-                /* Chiều cao tự động tối đa 55% màn hình để không bị khuất */
             }
 
-            /* Đẩy nút tiếp tục xuống để không che thư */
             .screen button.btn-premium {
                 margin-top: 120px;
             }
@@ -1032,6 +1020,7 @@
         }
         setInterval(createFlower, 400);
 
+        // --- HÀM HỖ TRỢ MÀU SẮC CHO HOA ---
         function adjustColor(color, amount) {
             return '#' + color.replace(/^#/, '').replace(/../g, color => ('0' + Math.min(255, Math.max(0, parseInt(color, 16) + amount)).toString(16)).substr(-2));
         }
@@ -1131,13 +1120,15 @@
             ctx.restore();
         }
 
+        // --- HÀM VẼ BÓ HOA HỒNG CHI TIẾT (ĐÃ CẬP NHẬT TỪ CODE 1) ---
         function drawRealisticBouquet(ctx, x, y, scale, rotation) {
             ctx.save();
             ctx.translate(x, y);
             ctx.scale(scale, scale);
             ctx.rotate(rotation * Math.PI / 180);
 
-            // Wrappers
+            // --- 1. VẼ GIẤY GÓI ---
+            // Lớp sau
             ctx.fillStyle = "#1a1a1a";
             ctx.beginPath();
             ctx.moveTo(0, 110);
@@ -1145,6 +1136,8 @@
             ctx.lineTo(70, -50);
             ctx.closePath();
             ctx.fill();
+
+            // Lớp giữa
             ctx.fillStyle = "#222222";
             ctx.beginPath();
             ctx.moveTo(0, 100);
@@ -1152,6 +1145,8 @@
             ctx.lineTo(30, -45);
             ctx.closePath();
             ctx.fill();
+
+            // Lớp trước
             ctx.fillStyle = "#2c2c2c";
             ctx.beginPath();
             ctx.moveTo(0, 100);
@@ -1159,34 +1154,92 @@
             ctx.lineTo(45, -35);
             ctx.closePath();
             ctx.fill();
+
+            // Nếp gấp
+            ctx.strokeStyle = "#000000";
+            ctx.lineWidth = 0.5;
+            ctx.beginPath();
+            ctx.moveTo(0, 100); ctx.lineTo(-30, 10);
+            ctx.moveTo(0, 100); ctx.lineTo(30, 20);
+            ctx.moveTo(-45, -35); ctx.lineTo(-20, -20);
+            ctx.stroke();
+
+            // Ruy băng
             ctx.fillStyle = "#f0f0f0";
             ctx.fillRect(-18, 65, 36, 5);
+            ctx.strokeStyle = "#cccccc";
+            ctx.lineWidth = 0.5;
+            ctx.strokeRect(-18, 65, 36, 5);
 
-            // Leaves
+            // --- 2. VẼ LÁ CÂY ---
             const leafColors = ["#2d5a27", "#3e7a37", "#1e3c1a"];
-            for (let i = 0; i < 15; i++) {
+            const totalLeaves = 20; // Số lượng lá
+
+            for (let i = 0; i < totalLeaves; i++) {
                 ctx.fillStyle = leafColors[Math.floor(Math.random() * leafColors.length)];
                 ctx.beginPath();
-                ctx.ellipse((Math.random() - 0.5) * 100, (Math.random() * 50) - 60, 4, 8, Math.random() * Math.PI, 0, Math.PI * 2);
+
+                let lX, lY, rotation;
+
+                // Dùng phép chia lấy dư để chia đều lá sang 2 bên
+                if (i % 2 === 0) {
+                    // --- BÊN TRÁI (X âm) ---
+                    // X từ -40 đến -70 (để lá nhô ra khỏi bó hoa)
+                    lX = -(40 + Math.random() * 30); 
+                    // Y ngẫu nhiên quanh miệng bó
+                    lY = -35 - Math.random() * 30;   
+                    // Xoay nghiêng sang trái
+                    rotation = -Math.PI / 3 + (Math.random() * 0.5); 
+                } else {
+                    // --- BÊN PHẢI (X dương) ---
+                    // X từ 40 đến 70
+                    lX = (40 + Math.random() * 30);  
+                    lY = -35 - Math.random() * 30;
+                    // Xoay nghiêng sang phải
+                    rotation = Math.PI / 3 - (Math.random() * 0.5);  
+                }
+
+                // Vẽ hình elip (chiếc lá)
+                ctx.ellipse(lX, lY, 4, 8, rotation, 0, Math.PI * 2);
                 ctx.fill();
             }
 
-            // Flowers
+            // --- 3. VẼ HOA HỒNG CHI TIẾT ---
             const baseFlowerColors = ["#ff0055", "#ff3377", "#e6004c", "#ff6699", "#ff1a66"];
-            for (let i = 0; i < 35; i++) {
+
+            for (let i = 0; i < 50; i++) {
                 const baseColor = baseFlowerColors[Math.floor(Math.random() * baseFlowerColors.length)];
+                // Dùng hàm adjustColor để tạo độ sâu cho hoa
+                const centerColor = adjustColor(baseColor, -60);
+
                 const angle = Math.random() * Math.PI * 2;
                 const r = Math.sqrt(Math.random()) * 45;
                 const fX = Math.cos(angle) * r;
                 const fY = Math.sin(angle) * r * 0.8 - 45;
+
                 const size = 7 + Math.random() * 5;
+
+                // Nền hoa gradient
                 const grd = ctx.createRadialGradient(fX, fY, size * 0.1, fX, fY, size);
-                grd.addColorStop(0, adjustColor(baseColor, -60));
+                grd.addColorStop(0, centerColor);
                 grd.addColorStop(0.7, baseColor);
                 ctx.fillStyle = grd;
                 ctx.beginPath();
                 ctx.arc(fX, fY, size, 0, Math.PI * 2);
                 ctx.fill();
+
+                // Cánh hoa xoắn ốc (Tạo nét vẽ chi tiết)
+                ctx.strokeStyle = adjustColor(baseColor, 30);
+                ctx.lineWidth = 1;
+                ctx.beginPath();
+                ctx.arc(fX, fY, size * 0.4, 0.5, Math.PI * 1.2);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(fX + 1, fY + 1, size * 0.6, 2.5, Math.PI * 0.8);
+                ctx.stroke();
+                ctx.beginPath();
+                ctx.arc(fX - 1, fY - 1, size * 0.3, 4, Math.PI * 2);
+                ctx.stroke();
             }
             ctx.restore();
         }
@@ -1351,4 +1404,3 @@
 </body>
 
 </html>
-
